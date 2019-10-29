@@ -70,3 +70,7 @@
 
 └─usrMsgIdSvr		用户微博数据服务
 
+
+## 整体架构图
+
+![整体架构图](http://wxgate01.5maogame.com/weibo/WeiBoFramework.png)
