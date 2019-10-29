@@ -73,4 +73,4 @@
 
 ## 整体架构图
 
-![整体架构图](http://wxgate01.5maogame.com/weibo/WeiBoFramework.png)
+![整体架构图](https://wxgate01.5maogame.com/weibo/WeiBoFramework.png)
