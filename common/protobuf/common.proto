@@ -1,0 +1,468 @@
+/*
+@Author : Ryan.wuxiaoyong
+*/
+
+syntax = "proto3";
+
+package common;
+
+
+
+//frontSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service frontSvr {
+    //for Client////////////
+    //拉取若干条微博消息
+    rpc Pull (CPullReq) returns (CPullRsp) {}
+    //发布一条微博消息
+    rpc Post (CPostReq) returns (CPostRsp) {}
+    //关注
+    rpc Follow (CFollowReq) returns (CFollowRsp) {}
+
+    //取关
+    rpc UnFollow (CUnFollowReq) returns (CUnFollowRsp) {}
+    //点赞
+    rpc Like (CLikeReq) returns (CLikeRsp) {}
+
+    //for frontSvrMng////////////
+    //探测Svr是否正常。SvrMng用，客户端无需调用
+    rpc CheckAvail(FrontCheckAvailReq) returns (FrontCheckAvailRsp) {}
+}
+
+//frontSvrMng/////////////////////////////////////////////////////////////////////////////////////////////////
+service frontSvrMng {
+    //for Client////////////
+    //查询本次归宿frontSvr
+    rpc QueryMyFrontSvr (CClientAuthInfo) returns (CFrontSvrAddr) {}
+}
+
+//frontNotifySvr/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+service frontNotifySvr {
+    //for Client////////////
+    //客户端建立服务端流式stream，接收notify。接收失败时重新选择frontNotifySvr重新发起链接创建新的stream
+    rpc createNotifyStream(CCreateNotifyStreamReq) returns (stream CNotify) {}
+    //userId下线
+    rpc Offline(COfflineReq) returns (COfflineRsp) {}
+
+    rpc HeartBeat(CHeartBeatReq) returns (CHeartBeatRsp) {}
+
+    //for frontNotifySvrMng////////////
+    //探测Svr是否正常。SvrMng用，客户端无需调用
+    rpc CheckAvail(FrontNotifyCheckAvailReq) returns (FrontNotifyCheckAvailRsp) {}
+}
+
+//frontNotifySvrMng/////////////////////////////////////////////////////////////////////////////////////////////////
+service frontNotifySvrMng {
+    //for Client////////////
+    //查询本次归宿frontNotifySvr
+    rpc QueryMyFrontNotifySvr (CClientAuthInfo) returns (CFrontNotifySvrAddr) {}
+}
+
+//pullSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+service pullSvr {
+    //建立双向stream，后续req和rsp通过此通道传送
+    rpc createStream(stream PullReq) returns (stream PullRsp) {}
+
+    //探测Svr是否正常。SvrMng用，客户端无需调用
+    rpc CheckAvail(CheckAvailReq) returns (CheckAvailRsp) {}
+}
+
+////pullSvrMng/////////////////////////////////////////////////////////////////////////////////////////////////
+//service pullSvrMng {
+//    //查询本次分配svr。由前端服务器定时查询(建议1秒)，以实现svr的负载均衡、熔断、在线缩扩容
+//    rpc QuerySvrAddr (QuerySvrAddrReq) returns (QuerySvrAddrRsp) {}
+//}
+
+//postSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+service postSvr {
+    //建立双向stream，后续req和rsp通过此通道传送
+    rpc createStream(stream PostReq) returns (stream PostRsp) {}
+
+    //探测Svr是否正常。SvrMng用，客户端无需调用
+    rpc CheckAvail(CheckAvailReq) returns (CheckAvailRsp) {}
+}
+
+////postSvrMng/////////////////////////////////////////////////////////////////////////////////////////////////
+//service postSvrMng {
+//    //查询本次分配svr。由前端服务器定时查询(建议1秒)，以实现svr的负载均衡、熔断、在线缩扩容
+//    rpc QuerySvrAddr (QuerySvrAddrReq) returns (QuerySvrAddrRsp) {}
+//}
+
+//msgIdGenerator/////////////////////////////////////////////////////////////////////////////////////////////////
+service msgIdGenerator {
+    //获取一个msgId
+    rpc GenMsgId (GenMsgIdReq) returns (GenMsgIdRsp) {}
+}
+
+//followSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service followSvr {
+    rpc QueryFollowList (QueryFollowListReq) returns (QueryFollowListRsp) {}
+
+    //关注
+    rpc Follow (FollowReq) returns (FollowRsp) {}
+    //取关
+    rpc UnFollow (UnFollowReq) returns (UnFollowRsp) {}
+
+}
+
+//followedSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service followedSvr {
+    rpc QueryFollowedList (QueryFollowedListReq) returns (QueryFollowedListRsp) {}
+
+    rpc QueryOnlineFollowedList (QueryFollowedListReq) returns (QueryFollowedListRsp) {}
+
+    //userId上线
+    rpc Online(OnlineReq) returns (OnlineRsp) {}
+    //userId下线
+    rpc Offline(OfflineReq) returns (OfflineRsp) {}
+
+    //关注
+    rpc Follow (FollowReq) returns (FollowRsp) {}
+    //取关
+    rpc UnFollow (UnFollowReq) returns (UnFollowRsp) {}
+
+}
+
+//relationChangeSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service relationChangeSvr {
+    //关注
+    rpc Follow (FollowReq) returns (FollowRsp) {}
+    //取关
+    rpc UnFollow (UnFollowReq) returns (UnFollowRsp) {}
+}
+
+//userMsgIdSvrMng/////////////////////////////////////////////////////////////////////////////////////////////////
+service userMsgIdSvrMng {
+    //批量传入userId查询，根据svr分组然后回复
+    rpc QueryUserMsgIdSvrAdd(QueryUserMsgIdSvrAddrReq) returns (QueryUserMsgIdSvrAddrRsp){}
+}
+
+//userMsgIdSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service userMsgIdSvr {
+    rpc PullMsg (PullMsgIdReq) returns (PullMsgIdRsp) {}
+    rpc PostMsg (PostMsgIdReq) returns (PostMsgIdRsp) {}
+    rpc DeleteMsg (DeleteMsgReq) returns (DeleteMsgRsp) {}
+}
+
+//contentSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service contentSvr {
+    rpc PullMsg (PullMsgContentReq) returns (PullMsgContentRsp) {}
+    rpc PostMsg (PostMsgContentReq) returns (PostMsgContentRsp) {}
+    rpc DeleteMsg (DeleteMsgReq) returns (DeleteMsgRsp) {}
+}
+
+//pushSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+service pushSvr {
+    //for PostSvr
+//    //PostSvr建立客户端流式stream，发送push
+//    rpc CreatePushStream(stream PushReq) returns (PushByeRsp) {}
+    rpc Push(PushReq) returns (PushRsp) {}
+
+    //for frontNotifySvr
+    //userId上线
+    rpc Online(OnlineReq) returns (OnlineRsp) {}
+    //userId下线
+    rpc Offline(OfflineReq) returns (OfflineRsp) {}
+    //frontNotifySvr建立服务端流式stream，接收notify
+    rpc CreateNotifyStream(CreateNotifyStreamReq) returns (stream Notify) {}
+}
+
+//message/////////////////////////////////////////////////////////////////////////////////////////////////
+
+message CHeartBeatReq{
+    int64 userId = 1;
+}
+message CHeartBeatRsp{
+
+}
+//用户信息。现在没有认证流程，所以未认证相关信息
+message CClientAuthInfo {
+    int64 UserId = 1;
+}
+
+//本次归宿frontSvr地址"ip:port"
+message CFrontSvrAddr {
+    //
+    string Addr = 1;
+}
+//本次归宿frontNotifySvr地址"ip:port"
+message CFrontNotifySvrAddr {
+    //
+    string Addr = 1;
+}
+
+//拉取请求
+message CPullReq {
+    int64 UserId = 1;
+
+    //上次获取到的最后一条微博的msgId，本次获取LastMsgId之前的。为0表示获取最新
+    int64 LastMsgId = 2;
+}
+message CPullRsp {
+    repeated MsgData MsgArr = 1;
+}
+
+//发布
+message CPostReq {
+    int64 UserId = 1;
+
+    //
+    MsgData Msg = 2;
+}
+message CPostRsp {
+    int64 MsgId = 1;
+}
+
+//关注
+message CFollowReq {
+    int64 UserId = 1;
+
+    int64 FollowedUserId = 2;
+}
+message CFollowRsp {
+
+}
+
+//取关
+message CUnFollowReq {
+    int64 UserId = 1;
+
+    int64 UnFollowedUserId = 2;
+}
+message CUnFollowRsp {
+
+}
+
+//点赞
+message CLikeReq {
+    int64 UserId = 1;
+
+    int64 MsgId = 2;
+}
+message CLikeRsp {
+
+}
+
+message COnlineReq{
+    int64 UserId = 1;
+}
+message COnlineRsp{
+
+}
+message COfflineReq{
+    int64 UserId = 1;
+}
+message COfflineRsp{
+
+}
+
+//
+message FrontCheckAvailReq {
+
+}
+message FrontCheckAvailRsp {
+
+}
+
+//
+message FrontNotifyCheckAvailReq {
+
+}
+message FrontNotifyCheckAvailRsp {
+
+}
+
+
+//
+message QuerySvrAddrReq {
+    int64 LastRefreshTime = 1; //上次回复时mng服务器本地时间戳
+}
+message QuerySvrAddrRsp {
+    int64 AnsTime = 1; //本次回复时mng服务器本地时间戳
+
+    bool NeedRefresh = 2;
+    string Addr = 3;
+}
+
+//拉取请求
+message PullReq {
+    int64 frontReqId = 1;
+
+    int64 UserId = 2;
+    //上次获取到的最后一条微博的msgId，本次获取LastMsgId之前的。为0表示获取最新
+    int64 LastMsgId = 3;
+}
+message MsgData {
+    int64 MsgId = 1;
+    int64 UserId = 2;
+    //
+    string text = 3;
+    repeated string imgUrlArr = 4;
+    string videoUrl = 5;
+}
+message PullRsp {
+    int64 frontReqId = 1;
+    repeated MsgData MsgArr = 2;
+}
+
+message QueryFollowListReq{
+    int64 UserId = 1;
+}
+message QueryFollowListRsp{
+    repeated int64 FollowIdArr = 1;
+}
+
+message QueryFollowedListReq{
+    int64 UserId = 1;
+}
+message QueryFollowedListRsp{
+    repeated int64 FollowedIdArr = 1;
+}
+
+message FollowReq{
+    int64 UserId = 2;
+    int64 FollowedUserId = 3;
+}
+message FollowRsp{
+}
+
+message UnFollowReq{
+    int64 UserId = 1;
+    int64 UnFollowedUserId = 2;
+}
+message UnFollowRsp{
+}
+
+message NewUserReq{
+    int64 UserId = 1;
+}
+message NewUserRsp{
+}
+
+message PostReq{
+    int64 frontReqId = 1;
+
+    MsgData Content = 2;
+}
+message PostRsp{
+    int64 frontReqId = 1;
+
+    int64 UserId = 2;
+    int64 MsgId = 3;
+}
+
+message GenMsgIdReq{
+
+}
+message GenMsgIdRsp{
+    int64 MsgId = 1;
+}
+
+message QueryUserMsgIdSvrAddrReq{
+    repeated int64 UserIdArr = 1;
+}
+message MsgIdSvrAddrAndUserId{
+    string Addr = 1;
+    repeated int64 UserIdArr = 2;
+}
+message QueryUserMsgIdSvrAddrRsp{
+    repeated MsgIdSvrAddrAndUserId DataArr = 1;
+}
+
+message PullMsgReq{
+     repeated int64 UserIdArr = 1;
+     int64 LastMsgId = 2;
+}
+message PullMsgRsp{
+    repeated MsgData MsgArr = 1;
+}
+
+message PullMsgIdReq{
+    repeated int64 UserIdArr = 1;
+    int64 LastMsgId = 2;
+}
+message PullMsgIdRsp{
+    repeated int64 MsgIdArr = 1;
+}
+
+message PostMsgIdReq{
+    int64 UserId = 1;
+    int64 MsgId = 2;
+}
+message PostMsgIdRsp{
+
+}
+
+message DeleteMsgReq{
+    int64 UserId = 1;
+    int64 MsgId = 2;
+}
+message DeleteMsgRsp{
+
+}
+
+message PullMsgContentReq{
+    repeated int64 msgIdArr = 1;
+}
+message PullMsgContentRsp{
+    repeated MsgData MsgArr = 1;
+}
+
+message PostMsgContentReq{
+    MsgData Content = 1;
+}
+message PostMsgContentRsp{
+
+}
+
+message PushReq{
+    int64 UserId = 1;
+    int64 MsgId = 2;
+}
+message PushRsp{
+
+}
+message PushByeRsp{
+
+}
+
+message OnlineReq{
+    int64 UserId = 1;
+    int32 FrontNotifySvrId = 2;
+}
+message OnlineRsp{
+}
+message OfflineReq{
+    int64 UserId = 1;
+}
+message OfflineRsp{
+}
+message CCreateNotifyStreamReq{
+    int64 userId = 1;
+}
+message CreateNotifyStreamReq{
+    int32 FrontNotifySvrId = 1;
+}
+message Notify{
+    int64 PostUserId = 1;
+    int64 MsgId = 2;
+
+    repeated int64 NotifyUserId = 3; //所有挂载在该frontNotifySvr的userId
+}
+message CNotify{
+    int64 NotifyUserId = 1;
+
+    int64 PostUserId = 2;
+    int64 MsgId = 3;
+}
+
+//
+message CheckAvailReq {
+
+}
+message CheckAvailRsp {
+
+}

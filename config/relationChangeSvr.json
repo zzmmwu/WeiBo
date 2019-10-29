@@ -1,0 +1,12 @@
+{
+  "myName": "relationChangeSvr",
+  "rlogSvrAddr": "139.155.0.212:23498",
+  "listenAddr": "0.0.0.0:23493",
+  "followSvrAddr": "139.155.0.212:23491",
+  "followedSvrAddr": "139.155.0.212:23492",
+  "mongoDBUrl": "127.0.0.1:27017",
+  "mongoDBName": "WeiBo",
+  "followColCount": 300,
+  "userLevelColCount": 20,
+  "followedColCount": 100
+}

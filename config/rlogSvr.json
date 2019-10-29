@@ -1,0 +1,5 @@
+{
+  "listenAddr": "0.0.0.0:23498",
+  "mongoDBUrl": "127.0.0.1:27017",
+  "mongoDBName": "rlog"
+}

@@ -1,0 +1,8 @@
+{
+  "myName": "contentSvr02_01",
+  "rlogSvrAddr": "139.155.0.212:23498",
+  "listenAddr": "0.0.0.0:23453",
+  "mongoDBUrl": "127.0.0.1:27017",
+  "mongoDBName": "WeiBo",
+  "contentColCount": 100
+}

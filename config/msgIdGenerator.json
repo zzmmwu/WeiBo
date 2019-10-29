@@ -1,0 +1,8 @@
+{
+  "myName": "msgIdGenerator",
+  "rlogSvrAddr": "139.155.0.212:23498",
+  "listenAddr": "0.0.0.0:23499",
+  "lastMsgId": 150,
+  "mongoDBUrl": "127.0.0.1:27017",
+  "mongoDBName": "WeiBo"
+}

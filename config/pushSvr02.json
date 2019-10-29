@@ -1,0 +1,6 @@
+{
+  "myName": "pushSvr02",
+  "rlogSvrAddr": "139.155.0.212:23498",
+  "listenAddr": "0.0.0.0:23472",
+  "followedSvrAddr": "139.155.0.212:23492"
+}

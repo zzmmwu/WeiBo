@@ -1,0 +1,9 @@
+{
+  "mongoDBUrl": "139.155.0.212:27017",
+  "mongoDBName": "WeiBo",
+  "followColCount": 300,
+  "userLevelColCount": 20,
+  "followedColCount": 100,
+  "contentColCount": 100,
+  "userMsgIdColCount": 100
+}

@@ -1,0 +1,8 @@
+{
+  "myName": "frontNotifySvr01",
+  "rlogSvrAddr": "139.155.0.212:23498",
+  "listenAddr": "0.0.0.0:23411",
+  "frontNotifySvrId": 1,
+  "followedSvrAddr": "139.155.0.212:23492",
+  "pushSvrAddrArr": ["139.155.0.212:23471", "139.155.0.212:23472"]
+}

@@ -1,0 +1,73 @@
+/*
+@Author : Ryan.wuxiaoyong
+*/
+
+syntax = "proto3";
+
+package rlog;
+
+
+
+//rlog/////////////////////////////////////////////////////////////////////////////////////////////////
+service RlogSvr {
+    rpc Log (LogReq) returns (LogRsp) {}
+
+    rpc LogFatal (LogFatalReq) returns (LogFatalRsp) {}
+
+    rpc StatPoint (StatPointReq) returns (StatPointRsp) {}
+
+    rpc Warning (WarningReq) returns (WarningRsp) {}
+
+
+//    rpc HeartBeat (HeartBeatReq) returns (HeartBeatRsp) {}
+}
+
+message LogReq{
+    string MyName = 1;
+    int64 TimeStamp = 2;
+    string Log = 3;
+}
+message LogRsp{
+
+}
+
+message LogFatalReq{
+    string MyName = 1;
+    int64 TimeStamp = 2;
+    string Log = 3;
+}
+message LogFatalRsp{
+
+}
+
+message StatPointDataPB{
+    string name = 1;
+    int64 data = 2;
+}
+message StatPointReq{
+    string MyName = 1;
+    int64 TimeStamp = 2;
+    string PointId = 3;
+    repeated StatPointDataPB dataArr = 4;
+}
+message StatPointRsp{
+
+}
+
+message WarningReq{
+    string MyName = 1;
+    int64 TimeStamp = 2;
+    int32 Level = 3;
+    string Desc = 4;
+    repeated StatPointDataPB dataArr = 5;
+}
+message WarningRsp{
+
+}
+
+message HeartBeatReq{
+
+}
+message HeartBeatRsp{
+
+}
