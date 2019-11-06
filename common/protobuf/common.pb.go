@@ -1322,9 +1322,111 @@ func (m *QueryFollowedListRsp) GetFollowedIdArr() []int64 {
 	return nil
 }
 
+type RelationChgReq struct {
+	FrontReqId           int64    `protobuf:"varint,1,opt,name=frontReqId,proto3" json:"frontReqId,omitempty"`
+	Follow               bool     `protobuf:"varint,2,opt,name=Follow,proto3" json:"Follow,omitempty"`
+	UserId               int64    `protobuf:"varint,3,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	FollowedUserId       int64    `protobuf:"varint,4,opt,name=FollowedUserId,proto3" json:"FollowedUserId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RelationChgReq) Reset()         { *m = RelationChgReq{} }
+func (m *RelationChgReq) String() string { return proto.CompactTextString(m) }
+func (*RelationChgReq) ProtoMessage()    {}
+func (*RelationChgReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{32}
+}
+
+func (m *RelationChgReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RelationChgReq.Unmarshal(m, b)
+}
+func (m *RelationChgReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RelationChgReq.Marshal(b, m, deterministic)
+}
+func (m *RelationChgReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RelationChgReq.Merge(m, src)
+}
+func (m *RelationChgReq) XXX_Size() int {
+	return xxx_messageInfo_RelationChgReq.Size(m)
+}
+func (m *RelationChgReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_RelationChgReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RelationChgReq proto.InternalMessageInfo
+
+func (m *RelationChgReq) GetFrontReqId() int64 {
+	if m != nil {
+		return m.FrontReqId
+	}
+	return 0
+}
+
+func (m *RelationChgReq) GetFollow() bool {
+	if m != nil {
+		return m.Follow
+	}
+	return false
+}
+
+func (m *RelationChgReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *RelationChgReq) GetFollowedUserId() int64 {
+	if m != nil {
+		return m.FollowedUserId
+	}
+	return 0
+}
+
+type RelationChgRsp struct {
+	FrontReqId           int64    `protobuf:"varint,1,opt,name=frontReqId,proto3" json:"frontReqId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RelationChgRsp) Reset()         { *m = RelationChgRsp{} }
+func (m *RelationChgRsp) String() string { return proto.CompactTextString(m) }
+func (*RelationChgRsp) ProtoMessage()    {}
+func (*RelationChgRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{33}
+}
+
+func (m *RelationChgRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RelationChgRsp.Unmarshal(m, b)
+}
+func (m *RelationChgRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RelationChgRsp.Marshal(b, m, deterministic)
+}
+func (m *RelationChgRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RelationChgRsp.Merge(m, src)
+}
+func (m *RelationChgRsp) XXX_Size() int {
+	return xxx_messageInfo_RelationChgRsp.Size(m)
+}
+func (m *RelationChgRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_RelationChgRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RelationChgRsp proto.InternalMessageInfo
+
+func (m *RelationChgRsp) GetFrontReqId() int64 {
+	if m != nil {
+		return m.FrontReqId
+	}
+	return 0
+}
+
 type FollowReq struct {
-	UserId               int64    `protobuf:"varint,2,opt,name=UserId,proto3" json:"UserId,omitempty"`
-	FollowedUserId       int64    `protobuf:"varint,3,opt,name=FollowedUserId,proto3" json:"FollowedUserId,omitempty"`
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	FollowedUserId       int64    `protobuf:"varint,2,opt,name=FollowedUserId,proto3" json:"FollowedUserId,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1334,7 +1436,7 @@ func (m *FollowReq) Reset()         { *m = FollowReq{} }
 func (m *FollowReq) String() string { return proto.CompactTextString(m) }
 func (*FollowReq) ProtoMessage()    {}
 func (*FollowReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{32}
+	return fileDescriptor_555bd8c177793206, []int{34}
 }
 
 func (m *FollowReq) XXX_Unmarshal(b []byte) error {
@@ -1379,7 +1481,7 @@ func (m *FollowRsp) Reset()         { *m = FollowRsp{} }
 func (m *FollowRsp) String() string { return proto.CompactTextString(m) }
 func (*FollowRsp) ProtoMessage()    {}
 func (*FollowRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{33}
+	return fileDescriptor_555bd8c177793206, []int{35}
 }
 
 func (m *FollowRsp) XXX_Unmarshal(b []byte) error {
@@ -1412,7 +1514,7 @@ func (m *UnFollowReq) Reset()         { *m = UnFollowReq{} }
 func (m *UnFollowReq) String() string { return proto.CompactTextString(m) }
 func (*UnFollowReq) ProtoMessage()    {}
 func (*UnFollowReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{34}
+	return fileDescriptor_555bd8c177793206, []int{36}
 }
 
 func (m *UnFollowReq) XXX_Unmarshal(b []byte) error {
@@ -1457,7 +1559,7 @@ func (m *UnFollowRsp) Reset()         { *m = UnFollowRsp{} }
 func (m *UnFollowRsp) String() string { return proto.CompactTextString(m) }
 func (*UnFollowRsp) ProtoMessage()    {}
 func (*UnFollowRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{35}
+	return fileDescriptor_555bd8c177793206, []int{37}
 }
 
 func (m *UnFollowRsp) XXX_Unmarshal(b []byte) error {
@@ -1478,75 +1580,543 @@ func (m *UnFollowRsp) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UnFollowRsp proto.InternalMessageInfo
 
-type NewUserReq struct {
+type DBQueryFollowReq struct {
 	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *NewUserReq) Reset()         { *m = NewUserReq{} }
-func (m *NewUserReq) String() string { return proto.CompactTextString(m) }
-func (*NewUserReq) ProtoMessage()    {}
-func (*NewUserReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{36}
+func (m *DBQueryFollowReq) Reset()         { *m = DBQueryFollowReq{} }
+func (m *DBQueryFollowReq) String() string { return proto.CompactTextString(m) }
+func (*DBQueryFollowReq) ProtoMessage()    {}
+func (*DBQueryFollowReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{38}
 }
 
-func (m *NewUserReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_NewUserReq.Unmarshal(m, b)
+func (m *DBQueryFollowReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryFollowReq.Unmarshal(m, b)
 }
-func (m *NewUserReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_NewUserReq.Marshal(b, m, deterministic)
+func (m *DBQueryFollowReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryFollowReq.Marshal(b, m, deterministic)
 }
-func (m *NewUserReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NewUserReq.Merge(m, src)
+func (m *DBQueryFollowReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryFollowReq.Merge(m, src)
 }
-func (m *NewUserReq) XXX_Size() int {
-	return xxx_messageInfo_NewUserReq.Size(m)
+func (m *DBQueryFollowReq) XXX_Size() int {
+	return xxx_messageInfo_DBQueryFollowReq.Size(m)
 }
-func (m *NewUserReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_NewUserReq.DiscardUnknown(m)
+func (m *DBQueryFollowReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryFollowReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_NewUserReq proto.InternalMessageInfo
+var xxx_messageInfo_DBQueryFollowReq proto.InternalMessageInfo
 
-func (m *NewUserReq) GetUserId() int64 {
+func (m *DBQueryFollowReq) GetUserId() int64 {
 	if m != nil {
 		return m.UserId
 	}
 	return 0
 }
 
-type NewUserRsp struct {
+type DBQueryFollowRsp struct {
+	FollowIdArr          []int64  `protobuf:"varint,1,rep,packed,name=FollowIdArr,proto3" json:"FollowIdArr,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *NewUserRsp) Reset()         { *m = NewUserRsp{} }
-func (m *NewUserRsp) String() string { return proto.CompactTextString(m) }
-func (*NewUserRsp) ProtoMessage()    {}
-func (*NewUserRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{37}
+func (m *DBQueryFollowRsp) Reset()         { *m = DBQueryFollowRsp{} }
+func (m *DBQueryFollowRsp) String() string { return proto.CompactTextString(m) }
+func (*DBQueryFollowRsp) ProtoMessage()    {}
+func (*DBQueryFollowRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{39}
 }
 
-func (m *NewUserRsp) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_NewUserRsp.Unmarshal(m, b)
+func (m *DBQueryFollowRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryFollowRsp.Unmarshal(m, b)
 }
-func (m *NewUserRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_NewUserRsp.Marshal(b, m, deterministic)
+func (m *DBQueryFollowRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryFollowRsp.Marshal(b, m, deterministic)
 }
-func (m *NewUserRsp) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NewUserRsp.Merge(m, src)
+func (m *DBQueryFollowRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryFollowRsp.Merge(m, src)
 }
-func (m *NewUserRsp) XXX_Size() int {
-	return xxx_messageInfo_NewUserRsp.Size(m)
+func (m *DBQueryFollowRsp) XXX_Size() int {
+	return xxx_messageInfo_DBQueryFollowRsp.Size(m)
 }
-func (m *NewUserRsp) XXX_DiscardUnknown() {
-	xxx_messageInfo_NewUserRsp.DiscardUnknown(m)
+func (m *DBQueryFollowRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryFollowRsp.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_NewUserRsp proto.InternalMessageInfo
+var xxx_messageInfo_DBQueryFollowRsp proto.InternalMessageInfo
+
+func (m *DBQueryFollowRsp) GetFollowIdArr() []int64 {
+	if m != nil {
+		return m.FollowIdArr
+	}
+	return nil
+}
+
+type DBQueryFollowerReq struct {
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBQueryFollowerReq) Reset()         { *m = DBQueryFollowerReq{} }
+func (m *DBQueryFollowerReq) String() string { return proto.CompactTextString(m) }
+func (*DBQueryFollowerReq) ProtoMessage()    {}
+func (*DBQueryFollowerReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{40}
+}
+
+func (m *DBQueryFollowerReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryFollowerReq.Unmarshal(m, b)
+}
+func (m *DBQueryFollowerReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryFollowerReq.Marshal(b, m, deterministic)
+}
+func (m *DBQueryFollowerReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryFollowerReq.Merge(m, src)
+}
+func (m *DBQueryFollowerReq) XXX_Size() int {
+	return xxx_messageInfo_DBQueryFollowerReq.Size(m)
+}
+func (m *DBQueryFollowerReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryFollowerReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBQueryFollowerReq proto.InternalMessageInfo
+
+func (m *DBQueryFollowerReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+type DBQueryFollowerRsp struct {
+	FollowerIdArr        []int64  `protobuf:"varint,1,rep,packed,name=FollowerIdArr,proto3" json:"FollowerIdArr,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBQueryFollowerRsp) Reset()         { *m = DBQueryFollowerRsp{} }
+func (m *DBQueryFollowerRsp) String() string { return proto.CompactTextString(m) }
+func (*DBQueryFollowerRsp) ProtoMessage()    {}
+func (*DBQueryFollowerRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{41}
+}
+
+func (m *DBQueryFollowerRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryFollowerRsp.Unmarshal(m, b)
+}
+func (m *DBQueryFollowerRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryFollowerRsp.Marshal(b, m, deterministic)
+}
+func (m *DBQueryFollowerRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryFollowerRsp.Merge(m, src)
+}
+func (m *DBQueryFollowerRsp) XXX_Size() int {
+	return xxx_messageInfo_DBQueryFollowerRsp.Size(m)
+}
+func (m *DBQueryFollowerRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryFollowerRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBQueryFollowerRsp proto.InternalMessageInfo
+
+func (m *DBQueryFollowerRsp) GetFollowerIdArr() []int64 {
+	if m != nil {
+		return m.FollowerIdArr
+	}
+	return nil
+}
+
+type DBQueryUserMsgIdReq struct {
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBQueryUserMsgIdReq) Reset()         { *m = DBQueryUserMsgIdReq{} }
+func (m *DBQueryUserMsgIdReq) String() string { return proto.CompactTextString(m) }
+func (*DBQueryUserMsgIdReq) ProtoMessage()    {}
+func (*DBQueryUserMsgIdReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{42}
+}
+
+func (m *DBQueryUserMsgIdReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryUserMsgIdReq.Unmarshal(m, b)
+}
+func (m *DBQueryUserMsgIdReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryUserMsgIdReq.Marshal(b, m, deterministic)
+}
+func (m *DBQueryUserMsgIdReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryUserMsgIdReq.Merge(m, src)
+}
+func (m *DBQueryUserMsgIdReq) XXX_Size() int {
+	return xxx_messageInfo_DBQueryUserMsgIdReq.Size(m)
+}
+func (m *DBQueryUserMsgIdReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryUserMsgIdReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBQueryUserMsgIdReq proto.InternalMessageInfo
+
+func (m *DBQueryUserMsgIdReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+type DBQueryUserMsgIdRsp struct {
+	MsgIdArr             []int64  `protobuf:"varint,1,rep,packed,name=MsgIdArr,proto3" json:"MsgIdArr,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBQueryUserMsgIdRsp) Reset()         { *m = DBQueryUserMsgIdRsp{} }
+func (m *DBQueryUserMsgIdRsp) String() string { return proto.CompactTextString(m) }
+func (*DBQueryUserMsgIdRsp) ProtoMessage()    {}
+func (*DBQueryUserMsgIdRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{43}
+}
+
+func (m *DBQueryUserMsgIdRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryUserMsgIdRsp.Unmarshal(m, b)
+}
+func (m *DBQueryUserMsgIdRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryUserMsgIdRsp.Marshal(b, m, deterministic)
+}
+func (m *DBQueryUserMsgIdRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryUserMsgIdRsp.Merge(m, src)
+}
+func (m *DBQueryUserMsgIdRsp) XXX_Size() int {
+	return xxx_messageInfo_DBQueryUserMsgIdRsp.Size(m)
+}
+func (m *DBQueryUserMsgIdRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryUserMsgIdRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBQueryUserMsgIdRsp proto.InternalMessageInfo
+
+func (m *DBQueryUserMsgIdRsp) GetMsgIdArr() []int64 {
+	if m != nil {
+		return m.MsgIdArr
+	}
+	return nil
+}
+
+type DBQueryMsgContentReq struct {
+	MsgId                int64    `protobuf:"varint,1,opt,name=MsgId,proto3" json:"MsgId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBQueryMsgContentReq) Reset()         { *m = DBQueryMsgContentReq{} }
+func (m *DBQueryMsgContentReq) String() string { return proto.CompactTextString(m) }
+func (*DBQueryMsgContentReq) ProtoMessage()    {}
+func (*DBQueryMsgContentReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{44}
+}
+
+func (m *DBQueryMsgContentReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryMsgContentReq.Unmarshal(m, b)
+}
+func (m *DBQueryMsgContentReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryMsgContentReq.Marshal(b, m, deterministic)
+}
+func (m *DBQueryMsgContentReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryMsgContentReq.Merge(m, src)
+}
+func (m *DBQueryMsgContentReq) XXX_Size() int {
+	return xxx_messageInfo_DBQueryMsgContentReq.Size(m)
+}
+func (m *DBQueryMsgContentReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryMsgContentReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBQueryMsgContentReq proto.InternalMessageInfo
+
+func (m *DBQueryMsgContentReq) GetMsgId() int64 {
+	if m != nil {
+		return m.MsgId
+	}
+	return 0
+}
+
+type DBQueryMsgContentRsp struct {
+	Msg                  *MsgData `protobuf:"bytes,1,opt,name=Msg,proto3" json:"Msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBQueryMsgContentRsp) Reset()         { *m = DBQueryMsgContentRsp{} }
+func (m *DBQueryMsgContentRsp) String() string { return proto.CompactTextString(m) }
+func (*DBQueryMsgContentRsp) ProtoMessage()    {}
+func (*DBQueryMsgContentRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{45}
+}
+
+func (m *DBQueryMsgContentRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBQueryMsgContentRsp.Unmarshal(m, b)
+}
+func (m *DBQueryMsgContentRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBQueryMsgContentRsp.Marshal(b, m, deterministic)
+}
+func (m *DBQueryMsgContentRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBQueryMsgContentRsp.Merge(m, src)
+}
+func (m *DBQueryMsgContentRsp) XXX_Size() int {
+	return xxx_messageInfo_DBQueryMsgContentRsp.Size(m)
+}
+func (m *DBQueryMsgContentRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBQueryMsgContentRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBQueryMsgContentRsp proto.InternalMessageInfo
+
+func (m *DBQueryMsgContentRsp) GetMsg() *MsgData {
+	if m != nil {
+		return m.Msg
+	}
+	return nil
+}
+
+type DBFollowReq struct {
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	FollowId             int64    `protobuf:"varint,2,opt,name=FollowId,proto3" json:"FollowId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBFollowReq) Reset()         { *m = DBFollowReq{} }
+func (m *DBFollowReq) String() string { return proto.CompactTextString(m) }
+func (*DBFollowReq) ProtoMessage()    {}
+func (*DBFollowReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{46}
+}
+
+func (m *DBFollowReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBFollowReq.Unmarshal(m, b)
+}
+func (m *DBFollowReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBFollowReq.Marshal(b, m, deterministic)
+}
+func (m *DBFollowReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBFollowReq.Merge(m, src)
+}
+func (m *DBFollowReq) XXX_Size() int {
+	return xxx_messageInfo_DBFollowReq.Size(m)
+}
+func (m *DBFollowReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBFollowReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBFollowReq proto.InternalMessageInfo
+
+func (m *DBFollowReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *DBFollowReq) GetFollowId() int64 {
+	if m != nil {
+		return m.FollowId
+	}
+	return 0
+}
+
+type DBFollowRsp struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBFollowRsp) Reset()         { *m = DBFollowRsp{} }
+func (m *DBFollowRsp) String() string { return proto.CompactTextString(m) }
+func (*DBFollowRsp) ProtoMessage()    {}
+func (*DBFollowRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{47}
+}
+
+func (m *DBFollowRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBFollowRsp.Unmarshal(m, b)
+}
+func (m *DBFollowRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBFollowRsp.Marshal(b, m, deterministic)
+}
+func (m *DBFollowRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBFollowRsp.Merge(m, src)
+}
+func (m *DBFollowRsp) XXX_Size() int {
+	return xxx_messageInfo_DBFollowRsp.Size(m)
+}
+func (m *DBFollowRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBFollowRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBFollowRsp proto.InternalMessageInfo
+
+type DBUnFollowReq struct {
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	FollowId             int64    `protobuf:"varint,2,opt,name=FollowId,proto3" json:"FollowId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBUnFollowReq) Reset()         { *m = DBUnFollowReq{} }
+func (m *DBUnFollowReq) String() string { return proto.CompactTextString(m) }
+func (*DBUnFollowReq) ProtoMessage()    {}
+func (*DBUnFollowReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{48}
+}
+
+func (m *DBUnFollowReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBUnFollowReq.Unmarshal(m, b)
+}
+func (m *DBUnFollowReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBUnFollowReq.Marshal(b, m, deterministic)
+}
+func (m *DBUnFollowReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBUnFollowReq.Merge(m, src)
+}
+func (m *DBUnFollowReq) XXX_Size() int {
+	return xxx_messageInfo_DBUnFollowReq.Size(m)
+}
+func (m *DBUnFollowReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBUnFollowReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBUnFollowReq proto.InternalMessageInfo
+
+func (m *DBUnFollowReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *DBUnFollowReq) GetFollowId() int64 {
+	if m != nil {
+		return m.FollowId
+	}
+	return 0
+}
+
+type DBUnFollowRsp struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBUnFollowRsp) Reset()         { *m = DBUnFollowRsp{} }
+func (m *DBUnFollowRsp) String() string { return proto.CompactTextString(m) }
+func (*DBUnFollowRsp) ProtoMessage()    {}
+func (*DBUnFollowRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{49}
+}
+
+func (m *DBUnFollowRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBUnFollowRsp.Unmarshal(m, b)
+}
+func (m *DBUnFollowRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBUnFollowRsp.Marshal(b, m, deterministic)
+}
+func (m *DBUnFollowRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBUnFollowRsp.Merge(m, src)
+}
+func (m *DBUnFollowRsp) XXX_Size() int {
+	return xxx_messageInfo_DBUnFollowRsp.Size(m)
+}
+func (m *DBUnFollowRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBUnFollowRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBUnFollowRsp proto.InternalMessageInfo
+
+type DBPostReq struct {
+	Content              *MsgData `protobuf:"bytes,1,opt,name=Content,proto3" json:"Content,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBPostReq) Reset()         { *m = DBPostReq{} }
+func (m *DBPostReq) String() string { return proto.CompactTextString(m) }
+func (*DBPostReq) ProtoMessage()    {}
+func (*DBPostReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{50}
+}
+
+func (m *DBPostReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBPostReq.Unmarshal(m, b)
+}
+func (m *DBPostReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBPostReq.Marshal(b, m, deterministic)
+}
+func (m *DBPostReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBPostReq.Merge(m, src)
+}
+func (m *DBPostReq) XXX_Size() int {
+	return xxx_messageInfo_DBPostReq.Size(m)
+}
+func (m *DBPostReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBPostReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBPostReq proto.InternalMessageInfo
+
+func (m *DBPostReq) GetContent() *MsgData {
+	if m != nil {
+		return m.Content
+	}
+	return nil
+}
+
+type DBPostRsp struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DBPostRsp) Reset()         { *m = DBPostRsp{} }
+func (m *DBPostRsp) String() string { return proto.CompactTextString(m) }
+func (*DBPostRsp) ProtoMessage()    {}
+func (*DBPostRsp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_555bd8c177793206, []int{51}
+}
+
+func (m *DBPostRsp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DBPostRsp.Unmarshal(m, b)
+}
+func (m *DBPostRsp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DBPostRsp.Marshal(b, m, deterministic)
+}
+func (m *DBPostRsp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DBPostRsp.Merge(m, src)
+}
+func (m *DBPostRsp) XXX_Size() int {
+	return xxx_messageInfo_DBPostRsp.Size(m)
+}
+func (m *DBPostRsp) XXX_DiscardUnknown() {
+	xxx_messageInfo_DBPostRsp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DBPostRsp proto.InternalMessageInfo
 
 type PostReq struct {
 	FrontReqId           int64    `protobuf:"varint,1,opt,name=frontReqId,proto3" json:"frontReqId,omitempty"`
@@ -1560,7 +2130,7 @@ func (m *PostReq) Reset()         { *m = PostReq{} }
 func (m *PostReq) String() string { return proto.CompactTextString(m) }
 func (*PostReq) ProtoMessage()    {}
 func (*PostReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{38}
+	return fileDescriptor_555bd8c177793206, []int{52}
 }
 
 func (m *PostReq) XXX_Unmarshal(b []byte) error {
@@ -1608,7 +2178,7 @@ func (m *PostRsp) Reset()         { *m = PostRsp{} }
 func (m *PostRsp) String() string { return proto.CompactTextString(m) }
 func (*PostRsp) ProtoMessage()    {}
 func (*PostRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{39}
+	return fileDescriptor_555bd8c177793206, []int{53}
 }
 
 func (m *PostRsp) XXX_Unmarshal(b []byte) error {
@@ -1660,7 +2230,7 @@ func (m *GenMsgIdReq) Reset()         { *m = GenMsgIdReq{} }
 func (m *GenMsgIdReq) String() string { return proto.CompactTextString(m) }
 func (*GenMsgIdReq) ProtoMessage()    {}
 func (*GenMsgIdReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{40}
+	return fileDescriptor_555bd8c177793206, []int{54}
 }
 
 func (m *GenMsgIdReq) XXX_Unmarshal(b []byte) error {
@@ -1692,7 +2262,7 @@ func (m *GenMsgIdRsp) Reset()         { *m = GenMsgIdRsp{} }
 func (m *GenMsgIdRsp) String() string { return proto.CompactTextString(m) }
 func (*GenMsgIdRsp) ProtoMessage()    {}
 func (*GenMsgIdRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{41}
+	return fileDescriptor_555bd8c177793206, []int{55}
 }
 
 func (m *GenMsgIdRsp) XXX_Unmarshal(b []byte) error {
@@ -1731,7 +2301,7 @@ func (m *QueryUserMsgIdSvrAddrReq) Reset()         { *m = QueryUserMsgIdSvrAddrR
 func (m *QueryUserMsgIdSvrAddrReq) String() string { return proto.CompactTextString(m) }
 func (*QueryUserMsgIdSvrAddrReq) ProtoMessage()    {}
 func (*QueryUserMsgIdSvrAddrReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{42}
+	return fileDescriptor_555bd8c177793206, []int{56}
 }
 
 func (m *QueryUserMsgIdSvrAddrReq) XXX_Unmarshal(b []byte) error {
@@ -1771,7 +2341,7 @@ func (m *MsgIdSvrAddrAndUserId) Reset()         { *m = MsgIdSvrAddrAndUserId{} }
 func (m *MsgIdSvrAddrAndUserId) String() string { return proto.CompactTextString(m) }
 func (*MsgIdSvrAddrAndUserId) ProtoMessage()    {}
 func (*MsgIdSvrAddrAndUserId) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{43}
+	return fileDescriptor_555bd8c177793206, []int{57}
 }
 
 func (m *MsgIdSvrAddrAndUserId) XXX_Unmarshal(b []byte) error {
@@ -1817,7 +2387,7 @@ func (m *QueryUserMsgIdSvrAddrRsp) Reset()         { *m = QueryUserMsgIdSvrAddrR
 func (m *QueryUserMsgIdSvrAddrRsp) String() string { return proto.CompactTextString(m) }
 func (*QueryUserMsgIdSvrAddrRsp) ProtoMessage()    {}
 func (*QueryUserMsgIdSvrAddrRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{44}
+	return fileDescriptor_555bd8c177793206, []int{58}
 }
 
 func (m *QueryUserMsgIdSvrAddrRsp) XXX_Unmarshal(b []byte) error {
@@ -1857,7 +2427,7 @@ func (m *PullMsgReq) Reset()         { *m = PullMsgReq{} }
 func (m *PullMsgReq) String() string { return proto.CompactTextString(m) }
 func (*PullMsgReq) ProtoMessage()    {}
 func (*PullMsgReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{45}
+	return fileDescriptor_555bd8c177793206, []int{59}
 }
 
 func (m *PullMsgReq) XXX_Unmarshal(b []byte) error {
@@ -1903,7 +2473,7 @@ func (m *PullMsgRsp) Reset()         { *m = PullMsgRsp{} }
 func (m *PullMsgRsp) String() string { return proto.CompactTextString(m) }
 func (*PullMsgRsp) ProtoMessage()    {}
 func (*PullMsgRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{46}
+	return fileDescriptor_555bd8c177793206, []int{60}
 }
 
 func (m *PullMsgRsp) XXX_Unmarshal(b []byte) error {
@@ -1943,7 +2513,7 @@ func (m *PullMsgIdReq) Reset()         { *m = PullMsgIdReq{} }
 func (m *PullMsgIdReq) String() string { return proto.CompactTextString(m) }
 func (*PullMsgIdReq) ProtoMessage()    {}
 func (*PullMsgIdReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{47}
+	return fileDescriptor_555bd8c177793206, []int{61}
 }
 
 func (m *PullMsgIdReq) XXX_Unmarshal(b []byte) error {
@@ -1989,7 +2559,7 @@ func (m *PullMsgIdRsp) Reset()         { *m = PullMsgIdRsp{} }
 func (m *PullMsgIdRsp) String() string { return proto.CompactTextString(m) }
 func (*PullMsgIdRsp) ProtoMessage()    {}
 func (*PullMsgIdRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{48}
+	return fileDescriptor_555bd8c177793206, []int{62}
 }
 
 func (m *PullMsgIdRsp) XXX_Unmarshal(b []byte) error {
@@ -2029,7 +2599,7 @@ func (m *PostMsgIdReq) Reset()         { *m = PostMsgIdReq{} }
 func (m *PostMsgIdReq) String() string { return proto.CompactTextString(m) }
 func (*PostMsgIdReq) ProtoMessage()    {}
 func (*PostMsgIdReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{49}
+	return fileDescriptor_555bd8c177793206, []int{63}
 }
 
 func (m *PostMsgIdReq) XXX_Unmarshal(b []byte) error {
@@ -2074,7 +2644,7 @@ func (m *PostMsgIdRsp) Reset()         { *m = PostMsgIdRsp{} }
 func (m *PostMsgIdRsp) String() string { return proto.CompactTextString(m) }
 func (*PostMsgIdRsp) ProtoMessage()    {}
 func (*PostMsgIdRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{50}
+	return fileDescriptor_555bd8c177793206, []int{64}
 }
 
 func (m *PostMsgIdRsp) XXX_Unmarshal(b []byte) error {
@@ -2107,7 +2677,7 @@ func (m *DeleteMsgReq) Reset()         { *m = DeleteMsgReq{} }
 func (m *DeleteMsgReq) String() string { return proto.CompactTextString(m) }
 func (*DeleteMsgReq) ProtoMessage()    {}
 func (*DeleteMsgReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{51}
+	return fileDescriptor_555bd8c177793206, []int{65}
 }
 
 func (m *DeleteMsgReq) XXX_Unmarshal(b []byte) error {
@@ -2152,7 +2722,7 @@ func (m *DeleteMsgRsp) Reset()         { *m = DeleteMsgRsp{} }
 func (m *DeleteMsgRsp) String() string { return proto.CompactTextString(m) }
 func (*DeleteMsgRsp) ProtoMessage()    {}
 func (*DeleteMsgRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{52}
+	return fileDescriptor_555bd8c177793206, []int{66}
 }
 
 func (m *DeleteMsgRsp) XXX_Unmarshal(b []byte) error {
@@ -2184,7 +2754,7 @@ func (m *PullMsgContentReq) Reset()         { *m = PullMsgContentReq{} }
 func (m *PullMsgContentReq) String() string { return proto.CompactTextString(m) }
 func (*PullMsgContentReq) ProtoMessage()    {}
 func (*PullMsgContentReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{53}
+	return fileDescriptor_555bd8c177793206, []int{67}
 }
 
 func (m *PullMsgContentReq) XXX_Unmarshal(b []byte) error {
@@ -2223,7 +2793,7 @@ func (m *PullMsgContentRsp) Reset()         { *m = PullMsgContentRsp{} }
 func (m *PullMsgContentRsp) String() string { return proto.CompactTextString(m) }
 func (*PullMsgContentRsp) ProtoMessage()    {}
 func (*PullMsgContentRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{54}
+	return fileDescriptor_555bd8c177793206, []int{68}
 }
 
 func (m *PullMsgContentRsp) XXX_Unmarshal(b []byte) error {
@@ -2262,7 +2832,7 @@ func (m *PostMsgContentReq) Reset()         { *m = PostMsgContentReq{} }
 func (m *PostMsgContentReq) String() string { return proto.CompactTextString(m) }
 func (*PostMsgContentReq) ProtoMessage()    {}
 func (*PostMsgContentReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{55}
+	return fileDescriptor_555bd8c177793206, []int{69}
 }
 
 func (m *PostMsgContentReq) XXX_Unmarshal(b []byte) error {
@@ -2300,7 +2870,7 @@ func (m *PostMsgContentRsp) Reset()         { *m = PostMsgContentRsp{} }
 func (m *PostMsgContentRsp) String() string { return proto.CompactTextString(m) }
 func (*PostMsgContentRsp) ProtoMessage()    {}
 func (*PostMsgContentRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{56}
+	return fileDescriptor_555bd8c177793206, []int{70}
 }
 
 func (m *PostMsgContentRsp) XXX_Unmarshal(b []byte) error {
@@ -2333,7 +2903,7 @@ func (m *PushReq) Reset()         { *m = PushReq{} }
 func (m *PushReq) String() string { return proto.CompactTextString(m) }
 func (*PushReq) ProtoMessage()    {}
 func (*PushReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{57}
+	return fileDescriptor_555bd8c177793206, []int{71}
 }
 
 func (m *PushReq) XXX_Unmarshal(b []byte) error {
@@ -2378,7 +2948,7 @@ func (m *PushRsp) Reset()         { *m = PushRsp{} }
 func (m *PushRsp) String() string { return proto.CompactTextString(m) }
 func (*PushRsp) ProtoMessage()    {}
 func (*PushRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{58}
+	return fileDescriptor_555bd8c177793206, []int{72}
 }
 
 func (m *PushRsp) XXX_Unmarshal(b []byte) error {
@@ -2409,7 +2979,7 @@ func (m *PushByeRsp) Reset()         { *m = PushByeRsp{} }
 func (m *PushByeRsp) String() string { return proto.CompactTextString(m) }
 func (*PushByeRsp) ProtoMessage()    {}
 func (*PushByeRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{59}
+	return fileDescriptor_555bd8c177793206, []int{73}
 }
 
 func (m *PushByeRsp) XXX_Unmarshal(b []byte) error {
@@ -2442,7 +3012,7 @@ func (m *OnlineReq) Reset()         { *m = OnlineReq{} }
 func (m *OnlineReq) String() string { return proto.CompactTextString(m) }
 func (*OnlineReq) ProtoMessage()    {}
 func (*OnlineReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{60}
+	return fileDescriptor_555bd8c177793206, []int{74}
 }
 
 func (m *OnlineReq) XXX_Unmarshal(b []byte) error {
@@ -2487,7 +3057,7 @@ func (m *OnlineRsp) Reset()         { *m = OnlineRsp{} }
 func (m *OnlineRsp) String() string { return proto.CompactTextString(m) }
 func (*OnlineRsp) ProtoMessage()    {}
 func (*OnlineRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{61}
+	return fileDescriptor_555bd8c177793206, []int{75}
 }
 
 func (m *OnlineRsp) XXX_Unmarshal(b []byte) error {
@@ -2519,7 +3089,7 @@ func (m *OfflineReq) Reset()         { *m = OfflineReq{} }
 func (m *OfflineReq) String() string { return proto.CompactTextString(m) }
 func (*OfflineReq) ProtoMessage()    {}
 func (*OfflineReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{62}
+	return fileDescriptor_555bd8c177793206, []int{76}
 }
 
 func (m *OfflineReq) XXX_Unmarshal(b []byte) error {
@@ -2557,7 +3127,7 @@ func (m *OfflineRsp) Reset()         { *m = OfflineRsp{} }
 func (m *OfflineRsp) String() string { return proto.CompactTextString(m) }
 func (*OfflineRsp) ProtoMessage()    {}
 func (*OfflineRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{63}
+	return fileDescriptor_555bd8c177793206, []int{77}
 }
 
 func (m *OfflineRsp) XXX_Unmarshal(b []byte) error {
@@ -2589,7 +3159,7 @@ func (m *CCreateNotifyStreamReq) Reset()         { *m = CCreateNotifyStreamReq{}
 func (m *CCreateNotifyStreamReq) String() string { return proto.CompactTextString(m) }
 func (*CCreateNotifyStreamReq) ProtoMessage()    {}
 func (*CCreateNotifyStreamReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{64}
+	return fileDescriptor_555bd8c177793206, []int{78}
 }
 
 func (m *CCreateNotifyStreamReq) XXX_Unmarshal(b []byte) error {
@@ -2628,7 +3198,7 @@ func (m *CreateNotifyStreamReq) Reset()         { *m = CreateNotifyStreamReq{} }
 func (m *CreateNotifyStreamReq) String() string { return proto.CompactTextString(m) }
 func (*CreateNotifyStreamReq) ProtoMessage()    {}
 func (*CreateNotifyStreamReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{65}
+	return fileDescriptor_555bd8c177793206, []int{79}
 }
 
 func (m *CreateNotifyStreamReq) XXX_Unmarshal(b []byte) error {
@@ -2669,7 +3239,7 @@ func (m *Notify) Reset()         { *m = Notify{} }
 func (m *Notify) String() string { return proto.CompactTextString(m) }
 func (*Notify) ProtoMessage()    {}
 func (*Notify) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{66}
+	return fileDescriptor_555bd8c177793206, []int{80}
 }
 
 func (m *Notify) XXX_Unmarshal(b []byte) error {
@@ -2724,7 +3294,7 @@ func (m *CNotify) Reset()         { *m = CNotify{} }
 func (m *CNotify) String() string { return proto.CompactTextString(m) }
 func (*CNotify) ProtoMessage()    {}
 func (*CNotify) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{67}
+	return fileDescriptor_555bd8c177793206, []int{81}
 }
 
 func (m *CNotify) XXX_Unmarshal(b []byte) error {
@@ -2777,7 +3347,7 @@ func (m *CheckAvailReq) Reset()         { *m = CheckAvailReq{} }
 func (m *CheckAvailReq) String() string { return proto.CompactTextString(m) }
 func (*CheckAvailReq) ProtoMessage()    {}
 func (*CheckAvailReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{68}
+	return fileDescriptor_555bd8c177793206, []int{82}
 }
 
 func (m *CheckAvailReq) XXX_Unmarshal(b []byte) error {
@@ -2808,7 +3378,7 @@ func (m *CheckAvailRsp) Reset()         { *m = CheckAvailRsp{} }
 func (m *CheckAvailRsp) String() string { return proto.CompactTextString(m) }
 func (*CheckAvailRsp) ProtoMessage()    {}
 func (*CheckAvailRsp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_555bd8c177793206, []int{69}
+	return fileDescriptor_555bd8c177793206, []int{83}
 }
 
 func (m *CheckAvailRsp) XXX_Unmarshal(b []byte) error {
@@ -2862,12 +3432,26 @@ func init() {
 	proto.RegisterType((*QueryFollowListRsp)(nil), "common.QueryFollowListRsp")
 	proto.RegisterType((*QueryFollowedListReq)(nil), "common.QueryFollowedListReq")
 	proto.RegisterType((*QueryFollowedListRsp)(nil), "common.QueryFollowedListRsp")
+	proto.RegisterType((*RelationChgReq)(nil), "common.RelationChgReq")
+	proto.RegisterType((*RelationChgRsp)(nil), "common.RelationChgRsp")
 	proto.RegisterType((*FollowReq)(nil), "common.FollowReq")
 	proto.RegisterType((*FollowRsp)(nil), "common.FollowRsp")
 	proto.RegisterType((*UnFollowReq)(nil), "common.UnFollowReq")
 	proto.RegisterType((*UnFollowRsp)(nil), "common.UnFollowRsp")
-	proto.RegisterType((*NewUserReq)(nil), "common.NewUserReq")
-	proto.RegisterType((*NewUserRsp)(nil), "common.NewUserRsp")
+	proto.RegisterType((*DBQueryFollowReq)(nil), "common.DBQueryFollowReq")
+	proto.RegisterType((*DBQueryFollowRsp)(nil), "common.DBQueryFollowRsp")
+	proto.RegisterType((*DBQueryFollowerReq)(nil), "common.DBQueryFollowerReq")
+	proto.RegisterType((*DBQueryFollowerRsp)(nil), "common.DBQueryFollowerRsp")
+	proto.RegisterType((*DBQueryUserMsgIdReq)(nil), "common.DBQueryUserMsgIdReq")
+	proto.RegisterType((*DBQueryUserMsgIdRsp)(nil), "common.DBQueryUserMsgIdRsp")
+	proto.RegisterType((*DBQueryMsgContentReq)(nil), "common.DBQueryMsgContentReq")
+	proto.RegisterType((*DBQueryMsgContentRsp)(nil), "common.DBQueryMsgContentRsp")
+	proto.RegisterType((*DBFollowReq)(nil), "common.DBFollowReq")
+	proto.RegisterType((*DBFollowRsp)(nil), "common.DBFollowRsp")
+	proto.RegisterType((*DBUnFollowReq)(nil), "common.DBUnFollowReq")
+	proto.RegisterType((*DBUnFollowRsp)(nil), "common.DBUnFollowRsp")
+	proto.RegisterType((*DBPostReq)(nil), "common.DBPostReq")
+	proto.RegisterType((*DBPostRsp)(nil), "common.DBPostRsp")
 	proto.RegisterType((*PostReq)(nil), "common.PostReq")
 	proto.RegisterType((*PostRsp)(nil), "common.PostRsp")
 	proto.RegisterType((*GenMsgIdReq)(nil), "common.GenMsgIdReq")
@@ -2905,105 +3489,122 @@ func init() {
 func init() { proto.RegisterFile("common.proto", fileDescriptor_555bd8c177793206) }
 
 var fileDescriptor_555bd8c177793206 = []byte{
-	// 1565 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x58, 0xcb, 0x6e, 0x14, 0x47,
-	0x17, 0xf6, 0xcc, 0x98, 0xb9, 0x9c, 0x19, 0xdb, 0xb8, 0xb0, 0xc1, 0xf4, 0xcf, 0x8f, 0xfc, 0x17,
-	0xfc, 0xc1, 0x20, 0x44, 0x2c, 0x23, 0x30, 0x11, 0x28, 0xca, 0xd0, 0x04, 0x70, 0xf0, 0xe0, 0xd0,
-	0x60, 0xb1, 0x89, 0x14, 0x0d, 0x9e, 0x9a, 0x8b, 0x98, 0xe9, 0x2e, 0xba, 0xda, 0x10, 0x16, 0x51,
-	0x56, 0xd9, 0xe4, 0x35, 0xf2, 0x18, 0xd9, 0x65, 0x19, 0x29, 0x8f, 0x91, 0xf7, 0x88, 0xaa, 0xba,
-	0xba, 0x2e, 0x7d, 0x99, 0xc6, 0x02, 0xb1, 0xf2, 0xf4, 0x57, 0xe7, 0x5e, 0xe7, 0x9c, 0x3a, 0xc7,
-	0xd0, 0x39, 0x0a, 0x66, 0xb3, 0xc0, 0xbf, 0x41, 0xc3, 0x20, 0x0a, 0x50, 0x3d, 0xfe, 0xc2, 0x57,
-	0x60, 0xc9, 0x7d, 0x4c, 0xfa, 0x61, 0x74, 0x9f, 0xf4, 0x23, 0x8f, 0xbc, 0x41, 0x67, 0xa1, 0x7e,
-	0xcc, 0x48, 0xb8, 0x37, 0xd8, 0xa8, 0x6c, 0x56, 0xb6, 0x6a, 0x9e, 0xfc, 0xc2, 0x2b, 0x16, 0x21,
-	0xa3, 0xf8, 0x2a, 0xac, 0xb8, 0xee, 0x74, 0x42, 0xfc, 0xa8, 0x7b, 0x1c, 0x8d, 0xf7, 0xfc, 0x61,
-	0xc0, 0x79, 0x0f, 0x2d, 0xde, 0xf8, 0x0b, 0x5f, 0x82, 0x25, 0xf7, 0x61, 0x18, 0xf8, 0xd1, 0xf3,
-	0xb7, 0x61, 0x77, 0x30, 0x08, 0x11, 0x82, 0x45, 0xfe, 0x57, 0x90, 0xb5, 0x3c, 0xf1, 0x1b, 0x5f,
-	0x85, 0x33, 0x31, 0xd1, 0xd3, 0x20, 0x9a, 0x0c, 0xdf, 0xcf, 0x23, 0xfd, 0x06, 0x9a, 0xee, 0xf7,
-	0xc7, 0xd3, 0xa9, 0xb4, 0x37, 0x4f, 0x27, 0xba, 0x00, 0xad, 0xfd, 0x3e, 0x8b, 0x7a, 0x6c, 0xb4,
-	0x37, 0xd8, 0xa8, 0x8a, 0x23, 0x0d, 0xe0, 0x9b, 0x89, 0x04, 0x46, 0xd1, 0x15, 0xa8, 0xf7, 0xd8,
-	0xa8, 0x1b, 0x72, 0x1d, 0xb5, 0xad, 0xf6, 0xce, 0xca, 0x0d, 0x19, 0xa9, 0x1e, 0x1b, 0x3d, 0xe8,
-	0x47, 0x7d, 0x4f, 0x1e, 0xe3, 0x6f, 0x39, 0x53, 0xc0, 0xa2, 0x79, 0x6a, 0xff, 0x07, 0xb5, 0x1e,
-	0x1b, 0x09, 0x85, 0x39, 0x92, 0xf8, 0x19, 0xde, 0x4c, 0xc4, 0x30, 0x8a, 0xd6, 0xe0, 0x54, 0x6c,
-	0x61, 0x2c, 0x25, 0xfe, 0xc0, 0xfb, 0x00, 0xee, 0xc3, 0x60, 0x3a, 0x0d, 0xde, 0xcd, 0x53, 0xf5,
-	0x05, 0x2c, 0xc7, 0x44, 0x64, 0x20, 0xcf, 0x63, 0x37, 0x53, 0x28, 0xee, 0x68, 0x69, 0x8c, 0x62,
-	0x0f, 0x3a, 0xee, 0xa1, 0x5f, 0x2e, 0xfd, 0x1a, 0x9c, 0x4e, 0xc8, 0x52, 0xf2, 0x33, 0x38, 0x5e,
-	0x36, 0x65, 0x32, 0x8a, 0xef, 0x40, 0xd3, 0xdd, 0x9f, 0xbc, 0x26, 0xf3, 0xe4, 0x2b, 0xcf, 0xab,
-	0xa6, 0xe7, 0x90, 0x70, 0x32, 0x8a, 0x2f, 0x03, 0xb8, 0x07, 0xfe, 0x74, 0xe2, 0xcf, 0x93, 0x23,
-	0xbc, 0x93, 0x54, 0x8c, 0xe2, 0xff, 0x43, 0xdb, 0x3d, 0x18, 0x0e, 0xcb, 0x98, 0x96, 0x0c, 0x32,
-	0x46, 0xf1, 0x1a, 0x20, 0x91, 0x79, 0xee, 0x98, 0x1c, 0xbd, 0xee, 0xbe, 0xed, 0x4f, 0x78, 0x66,
-	0xe5, 0xa1, 0x8c, 0x62, 0x07, 0x36, 0x8c, 0x2c, 0xb5, 0x39, 0x0a, 0xcf, 0x18, 0xc5, 0x77, 0x61,
-	0xe5, 0xd9, 0x31, 0x09, 0x93, 0xbc, 0xe6, 0xd6, 0x6d, 0xc1, 0x0a, 0xcf, 0x48, 0x8f, 0x0c, 0x43,
-	0xc2, 0xc6, 0x2f, 0x26, 0x33, 0x22, 0xcd, 0x4c, 0xc3, 0xb8, 0x9f, 0x62, 0x66, 0x14, 0x6d, 0x40,
-	0xa3, 0xeb, 0x33, 0x83, 0x29, 0xf9, 0x44, 0x9b, 0xd0, 0x7e, 0x4a, 0xc8, 0x40, 0xf2, 0x8b, 0xf8,
-	0x36, 0x3d, 0x13, 0x52, 0x35, 0x55, 0x33, 0x6a, 0xea, 0x47, 0x68, 0x24, 0x25, 0x75, 0x11, 0x60,
-	0xc8, 0xdd, 0xf0, 0xc8, 0x1b, 0x15, 0x39, 0x03, 0x31, 0xa2, 0x5a, 0x2d, 0x2e, 0xb9, 0x5a, 0xba,
-	0xe4, 0x7e, 0xad, 0x40, 0x43, 0xd6, 0x41, 0x7e, 0xda, 0x17, 0xca, 0x45, 0xb0, 0x18, 0x91, 0x9f,
-	0xa2, 0xc4, 0x5c, 0xfe, 0x9b, 0xeb, 0x9a, 0xcc, 0x46, 0x87, 0xe1, 0x94, 0xd7, 0xed, 0xe2, 0x66,
-	0x6d, 0xab, 0xe5, 0x69, 0x00, 0x39, 0xd0, 0x7c, 0x3b, 0x19, 0x90, 0xe0, 0x30, 0x9c, 0x6e, 0x9c,
-	0x12, 0x5c, 0xea, 0x1b, 0x7b, 0xd2, 0x51, 0x46, 0x4b, 0x1d, 0xd5, 0x9d, 0xa1, 0x3a, 0xbf, 0x33,
-	0x5c, 0x07, 0x24, 0xee, 0x27, 0x2e, 0x81, 0xfd, 0xc9, 0xdc, 0x1e, 0x81, 0x6f, 0x67, 0xa9, 0x19,
-	0xe5, 0xd7, 0x16, 0x03, 0x7b, 0x83, 0xa4, 0x17, 0xd5, 0x3c, 0x13, 0xc2, 0x37, 0x60, 0xcd, 0xe0,
-	0x23, 0x83, 0x32, 0x3d, 0xf7, 0xf2, 0xe8, 0x19, 0x45, 0x97, 0x61, 0x29, 0x81, 0x4c, 0x5d, 0x36,
-	0x88, 0x9f, 0x40, 0x2b, 0xaf, 0x4b, 0x54, 0x4b, 0x7a, 0x50, 0x2d, 0xb7, 0x07, 0xb5, 0x95, 0x30,
-	0x46, 0xf1, 0x33, 0x68, 0x7f, 0xea, 0x0e, 0xb4, 0x64, 0x88, 0x8c, 0x5b, 0xc7, 0x53, 0xf2, 0x8e,
-	0x9f, 0x95, 0xb4, 0x8e, 0x84, 0x8a, 0x51, 0xfc, 0x02, 0x1a, 0x49, 0x73, 0x2f, 0xcb, 0x8b, 0xab,
-	0xd0, 0x70, 0x03, 0x3f, 0x22, 0x7e, 0x54, 0xd4, 0xe8, 0x93, 0x73, 0xfc, 0x52, 0x4a, 0xfd, 0x80,
-	0x6c, 0x2b, 0x8a, 0xb1, 0x2a, 0x96, 0x9a, 0xd9, 0x29, 0x97, 0xa0, 0xfd, 0x88, 0xf8, 0xe2, 0x37,
-	0x6f, 0x3d, 0x97, 0x8c, 0xcf, 0xc2, 0x77, 0xe5, 0x0e, 0x6c, 0x88, 0x84, 0xe0, 0x82, 0x05, 0x62,
-	0x34, 0xa3, 0x0b, 0xd0, 0x8a, 0xf5, 0xe9, 0x84, 0xd0, 0x00, 0xde, 0x83, 0x75, 0x93, 0xa1, 0xeb,
-	0x0f, 0x74, 0x6d, 0xa6, 0x9f, 0x67, 0x5b, 0x54, 0x35, 0x2d, 0xea, 0x79, 0x91, 0x11, 0x8c, 0xa2,
-	0x5d, 0x68, 0xf0, 0xf0, 0xe9, 0xb7, 0xf8, 0xbf, 0x46, 0x60, 0xb3, 0xda, 0xbd, 0x84, 0x1a, 0x3f,
-	0x06, 0xe0, 0x45, 0xdd, 0x63, 0xa3, 0x52, 0x5f, 0x4a, 0x26, 0x83, 0x5b, 0x5a, 0xd2, 0x49, 0x66,
-	0x83, 0xef, 0xa0, 0x23, 0xd9, 0xc4, 0x7d, 0x7c, 0x94, 0x09, 0xd7, 0x4c, 0x59, 0x8c, 0xf2, 0x6e,
-	0x26, 0x7e, 0x6b, 0x51, 0xea, 0x1b, 0xdf, 0x83, 0x0e, 0xcf, 0x2f, 0xa5, 0xf7, 0x64, 0xcf, 0xed,
-	0xb2, 0xc9, 0xcd, 0x28, 0x97, 0xf6, 0x80, 0x4c, 0x49, 0x44, 0x64, 0x20, 0x4f, 0x2c, 0x4d, 0x73,
-	0x33, 0x8a, 0xbf, 0x84, 0x55, 0xe9, 0x87, 0xac, 0x06, 0x2e, 0xd2, 0x81, 0xe6, 0x2c, 0xe5, 0xcc,
-	0x4c, 0x3b, 0x93, 0x66, 0x38, 0xc9, 0x15, 0x7c, 0x0d, 0xab, 0xd2, 0x19, 0x43, 0x9d, 0x51, 0xaa,
-	0x95, 0x92, 0x52, 0x3d, 0x93, 0xe1, 0x67, 0x14, 0xef, 0xf2, 0xd7, 0x82, 0x8d, 0x4f, 0x1e, 0x8c,
-	0x96, 0x64, 0x64, 0x94, 0xf7, 0x19, 0xfe, 0xf3, 0xfe, 0x7b, 0x31, 0x6c, 0x1c, 0x40, 0xab, 0x74,
-	0xaa, 0xe1, 0xbd, 0xcf, 0x9e, 0x85, 0xa5, 0xf8, 0x53, 0x5e, 0x06, 0xe7, 0xbd, 0x55, 0x0f, 0x40,
-	0x97, 0x01, 0x3e, 0x60, 0xfe, 0xe9, 0x68, 0x2a, 0x46, 0xf1, 0x36, 0x9c, 0x75, 0xdd, 0x90, 0xf4,
-	0x23, 0x22, 0xc5, 0x46, 0x21, 0xe9, 0xcf, 0xe6, 0x2d, 0x03, 0x2e, 0xac, 0xe7, 0x33, 0xe4, 0xd9,
-	0x5d, 0x29, 0xb0, 0xfb, 0x15, 0xd4, 0xe3, 0x4f, 0xde, 0x19, 0x79, 0xe4, 0x2d, 0x53, 0x0d, 0x24,
-	0x3f, 0xc2, 0x08, 0x43, 0x27, 0xe6, 0x57, 0x2f, 0x0f, 0xcf, 0x26, 0x0b, 0xc3, 0x47, 0xd0, 0x70,
-	0xa5, 0x92, 0x34, 0x79, 0xac, 0xc6, 0xc2, 0x52, 0x86, 0x54, 0x8b, 0x0d, 0xb1, 0x5a, 0x31, 0x5f,
-	0x8d, 0xac, 0x39, 0xd0, 0x06, 0x18, 0xdd, 0xf9, 0xab, 0x0a, 0xcd, 0xa1, 0x5c, 0x80, 0xd0, 0x75,
-	0x58, 0xe4, 0x59, 0x8e, 0x4e, 0x27, 0x99, 0x98, 0xec, 0x32, 0x4e, 0x0a, 0x61, 0x14, 0x2f, 0x08,
-	0xea, 0x80, 0x45, 0x26, 0x75, 0xfc, 0x4a, 0x39, 0x29, 0x44, 0x50, 0xef, 0x40, 0x3d, 0x7e, 0x05,
-	0x11, 0x52, 0xa7, 0xea, 0xa5, 0x75, 0x32, 0x98, 0xe0, 0xb9, 0x03, 0xcd, 0xe4, 0xed, 0x44, 0x6b,
-	0x8a, 0xc2, 0x78, 0xa1, 0x9d, 0x1c, 0x34, 0xb1, 0x8d, 0x0f, 0xeb, 0x86, 0x6d, 0x72, 0xea, 0x77,
-	0x52, 0x88, 0xa0, 0x7e, 0x08, 0xa0, 0xa3, 0x82, 0x9c, 0x84, 0x22, 0x3b, 0x79, 0x3b, 0x85, 0x67,
-	0x5c, 0xce, 0x8e, 0x07, 0xed, 0x24, 0x96, 0x3d, 0x7f, 0x84, 0x5c, 0x39, 0x1b, 0xf7, 0xde, 0x27,
-	0x2b, 0x26, 0x3a, 0xa7, 0xb4, 0xdb, 0x0b, 0xaa, 0xb3, 0xae, 0x03, 0x60, 0xac, 0xa3, 0x78, 0x61,
-	0xe7, 0xf7, 0x2a, 0x2c, 0x0f, 0xad, 0x04, 0x45, 0x7b, 0x80, 0x8e, 0x32, 0x39, 0x8e, 0x2e, 0x6a,
-	0xd1, 0x79, 0x05, 0xe0, 0xa8, 0xf6, 0x22, 0xd3, 0x0e, 0x2f, 0x6c, 0x57, 0xd0, 0x2d, 0x68, 0xc8,
-	0x72, 0x43, 0x67, 0xd4, 0xb9, 0x2e, 0x53, 0x27, 0x0b, 0x8a, 0x80, 0xdd, 0x85, 0x96, 0xda, 0xb8,
-	0x91, 0x36, 0xdd, 0x5c, 0xd7, 0x9d, 0x3c, 0x58, 0x30, 0x7b, 0x56, 0xb4, 0x37, 0xad, 0x88, 0xe6,
-	0xec, 0x2e, 0x4e, 0x09, 0x85, 0x88, 0xfc, 0x00, 0x56, 0xed, 0x20, 0xf1, 0xf8, 0x1f, 0xc0, 0xba,
-	0x19, 0x7f, 0x1d, 0xc0, 0xc2, 0x5b, 0xf8, 0x8f, 0x7d, 0x0b, 0xd6, 0xbe, 0x8f, 0x17, 0x76, 0x7e,
-	0x81, 0x06, 0x3d, 0x9e, 0x4e, 0xb9, 0x88, 0xdb, 0xd0, 0x89, 0xef, 0x40, 0x46, 0x5f, 0x45, 0x37,
-	0xa9, 0x18, 0x1b, 0xe0, 0x46, 0x6e, 0x55, 0xb6, 0x2b, 0xe8, 0x9e, 0xe5, 0xbc, 0x8e, 0x91, 0xe5,
-	0x71, 0x1e, 0x2c, 0xdc, 0xe4, 0x06, 0x04, 0x2c, 0x9a, 0x6f, 0x80, 0x2c, 0x42, 0x1b, 0xf8, 0x44,
-	0x06, 0x3c, 0x86, 0x65, 0xf1, 0x26, 0x3e, 0x22, 0x3e, 0x09, 0xfb, 0x51, 0xc0, 0xed, 0x68, 0x26,
-	0xe3, 0x9d, 0x4e, 0x21, 0x63, 0xfe, 0x73, 0xb2, 0xa0, 0x90, 0xf4, 0x67, 0x05, 0x5a, 0x43, 0x51,
-	0xb1, 0xdc, 0x9b, 0x27, 0xb2, 0x54, 0xf4, 0xe2, 0xa1, 0xcb, 0x30, 0xbb, 0xbf, 0x38, 0x85, 0x67,
-	0x22, 0xc1, 0xb6, 0x55, 0xab, 0x59, 0x55, 0xa9, 0xa3, 0x3a, 0x46, 0x1a, 0x12, 0x1c, 0xb7, 0x8d,
-	0x46, 0xa3, 0xec, 0x35, 0xfb, 0x4c, 0x16, 0x14, 0x4e, 0xfc, 0x56, 0x83, 0xf6, 0x50, 0xce, 0xfb,
-	0xdc, 0x8d, 0x67, 0xb0, 0x9a, 0xd9, 0x6b, 0xd0, 0x85, 0x1c, 0x63, 0xd5, 0x8a, 0xe4, 0xcc, 0x39,
-	0x15, 0xa6, 0xbd, 0x84, 0x73, 0xe2, 0x24, 0x7e, 0x48, 0x3f, 0xa1, 0xe0, 0x6d, 0xa8, 0xc7, 0x32,
-	0x75, 0x94, 0xd4, 0xeb, 0xef, 0xa4, 0x21, 0xc1, 0x71, 0x53, 0x37, 0x0b, 0xd5, 0xaf, 0x8d, 0x5e,
-	0x91, 0xc1, 0x3e, 0xf3, 0x65, 0xfc, 0x0c, 0xab, 0x21, 0x99, 0xf6, 0xa3, 0x49, 0xe0, 0xbb, 0xe3,
-	0xbe, 0x3f, 0x22, 0xfc, 0x46, 0x3e, 0x9f, 0xfa, 0x00, 0x56, 0x8e, 0x8d, 0xc5, 0x81, 0x37, 0xa0,
-	0x1f, 0xe4, 0x9a, 0x9b, 0x5a, 0x28, 0x74, 0xcf, 0x2b, 0xda, 0x79, 0x9c, 0x12, 0x0a, 0xa1, 0xf0,
-	0x8f, 0x0a, 0x74, 0x4c, 0x8d, 0x68, 0x37, 0xfe, 0xff, 0x41, 0x8f, 0x8d, 0xf4, 0x6b, 0x69, 0x8e,
-	0xfe, 0x4e, 0x0e, 0x2a, 0x5c, 0xde, 0x8d, 0x57, 0x41, 0x9b, 0xd1, 0x98, 0xdd, 0x9d, 0x1c, 0x54,
-	0x30, 0x7e, 0x05, 0x2d, 0x35, 0x57, 0x6b, 0x56, 0x73, 0x50, 0x77, 0x72, 0x50, 0x61, 0xfd, 0xdf,
-	0x15, 0x80, 0xa3, 0x78, 0x9a, 0xe5, 0xb6, 0x77, 0xb5, 0xed, 0xe7, 0x53, 0x56, 0xea, 0x99, 0xd9,
-	0x29, 0x3a, 0x12, 0xc6, 0x74, 0xb5, 0x17, 0xe7, 0x53, 0xf6, 0xe6, 0x8a, 0xc8, 0x4c, 0xd4, 0x1f,
-	0xe5, 0xcf, 0x3f, 0x15, 0xfe, 0x38, 0xb0, 0x31, 0x77, 0xe6, 0x1a, 0x9f, 0xa3, 0xd8, 0xd8, 0x7c,
-	0x14, 0xc4, 0xa0, 0xee, 0xd8, 0xc0, 0xe7, 0x2c, 0xc3, 0x47, 0x80, 0xb2, 0x63, 0x01, 0x52, 0x4b,
-	0x6c, 0xfe, 0xc8, 0xb0, 0x9c, 0x1c, 0xeb, 0x89, 0xe1, 0x55, 0x5d, 0xfc, 0x97, 0xfe, 0xe6, 0xbf,
-	0x01, 0x00, 0x00, 0xff, 0xff, 0x03, 0x82, 0x9b, 0x2a, 0xb5, 0x17, 0x00, 0x00,
+	// 1825 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x59, 0xdd, 0x6e, 0x1b, 0xb7,
+	0x12, 0xb6, 0x24, 0xdb, 0x92, 0x46, 0x7f, 0x31, 0x6d, 0x27, 0xce, 0x26, 0x27, 0xf0, 0x61, 0x72,
+	0x4e, 0x1c, 0xc3, 0xc7, 0xc7, 0x55, 0x12, 0x3b, 0x7f, 0x28, 0x2a, 0xaf, 0x9b, 0xc4, 0x8d, 0x15,
+	0x37, 0x9b, 0x18, 0x41, 0x81, 0x02, 0x85, 0x62, 0xad, 0x64, 0x21, 0xb2, 0x76, 0xb3, 0x5c, 0xa7,
+	0xcd, 0x55, 0xaf, 0x0a, 0x14, 0x7d, 0x8d, 0x3e, 0x46, 0xef, 0x7a, 0x59, 0xa0, 0xf7, 0x7d, 0x81,
+	0xbe, 0x47, 0x41, 0x2e, 0xb9, 0x24, 0xf7, 0xd7, 0x46, 0x8c, 0x5c, 0x59, 0xfb, 0x71, 0x66, 0x38,
+	0x33, 0x9c, 0x19, 0xce, 0xd0, 0x50, 0x3f, 0x74, 0x8e, 0x8f, 0x9d, 0xc9, 0xba, 0xeb, 0x39, 0xbe,
+	0x83, 0x66, 0x83, 0x2f, 0x7c, 0x13, 0x1a, 0xe6, 0x53, 0xbb, 0xe7, 0xf9, 0xdb, 0x76, 0xcf, 0xb7,
+	0xec, 0x77, 0xe8, 0x22, 0xcc, 0x9e, 0x10, 0xdb, 0xdb, 0xed, 0x2f, 0x15, 0x96, 0x0b, 0x2b, 0x25,
+	0x8b, 0x7f, 0xe1, 0x96, 0x46, 0x48, 0x5c, 0x7c, 0x0b, 0x5a, 0xa6, 0x39, 0x1e, 0xd9, 0x13, 0xbf,
+	0x73, 0xe2, 0x1f, 0xed, 0x4e, 0x06, 0x0e, 0xe5, 0x3d, 0xd0, 0x78, 0x83, 0x2f, 0x7c, 0x1d, 0x1a,
+	0xe6, 0x63, 0xcf, 0x99, 0xf8, 0x2f, 0xdf, 0x7b, 0x9d, 0x7e, 0xdf, 0x43, 0x08, 0xa6, 0xe9, 0x5f,
+	0x46, 0x56, 0xb5, 0xd8, 0x6f, 0x7c, 0x0b, 0xe6, 0x03, 0xa2, 0xe7, 0x8e, 0x3f, 0x1a, 0x7c, 0xc8,
+	0x22, 0xfd, 0x02, 0x2a, 0xe6, 0xd7, 0x27, 0xe3, 0x31, 0xd7, 0x37, 0x69, 0x4f, 0x74, 0x15, 0xaa,
+	0x7b, 0x3d, 0xe2, 0x77, 0xc9, 0x70, 0xb7, 0xbf, 0x54, 0x64, 0x4b, 0x12, 0xc0, 0xb7, 0x85, 0x04,
+	0xe2, 0xa2, 0x9b, 0x30, 0xdb, 0x25, 0xc3, 0x8e, 0x47, 0xf7, 0x28, 0xad, 0xd4, 0xda, 0xad, 0x75,
+	0xee, 0xa9, 0x2e, 0x19, 0xee, 0xf4, 0xfc, 0x9e, 0xc5, 0x97, 0xf1, 0x97, 0x94, 0xc9, 0x21, 0x7e,
+	0xd6, 0xb6, 0xff, 0x86, 0x52, 0x97, 0x0c, 0xd9, 0x86, 0x09, 0x92, 0xe8, 0x1a, 0x5e, 0x16, 0x62,
+	0x88, 0x8b, 0x16, 0x60, 0x26, 0xd0, 0x30, 0x90, 0x12, 0x7c, 0xe0, 0x3d, 0x00, 0xf3, 0xb1, 0x33,
+	0x1e, 0x3b, 0xdf, 0x67, 0x6d, 0xf5, 0x5f, 0x68, 0x06, 0x44, 0x76, 0x9f, 0xaf, 0x07, 0x66, 0x46,
+	0x50, 0x5c, 0x97, 0xd2, 0x88, 0x8b, 0x2d, 0xa8, 0x9b, 0x07, 0x93, 0x7c, 0xe9, 0xab, 0x70, 0x41,
+	0x90, 0x45, 0xe4, 0xc7, 0x70, 0xdc, 0x54, 0x65, 0x12, 0x17, 0xdf, 0x83, 0x8a, 0xb9, 0x37, 0x7a,
+	0x6b, 0x67, 0xc9, 0x0f, 0x2d, 0x2f, 0xaa, 0x96, 0x83, 0xe0, 0x24, 0x2e, 0xbe, 0x01, 0x60, 0xee,
+	0x4f, 0xc6, 0xa3, 0x49, 0x96, 0x1c, 0x66, 0x1d, 0xa7, 0x22, 0x2e, 0xfe, 0x0f, 0xd4, 0xcc, 0xfd,
+	0xc1, 0x20, 0x8f, 0xa9, 0xa1, 0x90, 0x11, 0x17, 0x2f, 0x00, 0x62, 0x91, 0x67, 0x1e, 0xd9, 0x87,
+	0x6f, 0x3b, 0xef, 0x7b, 0x23, 0x1a, 0x59, 0x49, 0x28, 0x71, 0xb1, 0x01, 0x4b, 0x4a, 0x94, 0xea,
+	0x1c, 0xa9, 0x6b, 0xc4, 0xc5, 0x0f, 0xa1, 0xf5, 0xe2, 0xc4, 0xf6, 0x44, 0x5c, 0x53, 0xed, 0x56,
+	0xa0, 0x45, 0x23, 0xd2, 0xb2, 0x07, 0x9e, 0x4d, 0x8e, 0x5e, 0x8d, 0x8e, 0x6d, 0xae, 0x66, 0x14,
+	0xc6, 0xbd, 0x08, 0x33, 0x71, 0xd1, 0x12, 0x94, 0x3b, 0x13, 0xa2, 0x30, 0x89, 0x4f, 0xb4, 0x0c,
+	0xb5, 0xe7, 0xb6, 0xdd, 0xe7, 0xfc, 0xcc, 0xbf, 0x15, 0x4b, 0x85, 0xc2, 0x9c, 0x2a, 0x29, 0x39,
+	0xf5, 0x1d, 0x94, 0x45, 0x4a, 0x5d, 0x03, 0x18, 0x50, 0x33, 0x2c, 0xfb, 0x5d, 0xe8, 0x39, 0x05,
+	0x51, 0xbc, 0x5a, 0x4c, 0x4f, 0xb9, 0x52, 0x34, 0xe5, 0x7e, 0x2a, 0x40, 0x99, 0xe7, 0x41, 0x72,
+	0xd8, 0xa7, 0xca, 0x45, 0x30, 0xed, 0xdb, 0x3f, 0xf8, 0x42, 0x5d, 0xfa, 0x9b, 0xee, 0x35, 0x3a,
+	0x1e, 0x1e, 0x78, 0x63, 0x9a, 0xb7, 0xd3, 0xcb, 0xa5, 0x95, 0xaa, 0x25, 0x01, 0x64, 0x40, 0xe5,
+	0xfd, 0xa8, 0x6f, 0x3b, 0x07, 0xde, 0x78, 0x69, 0x86, 0x71, 0x85, 0xdf, 0xd8, 0xe2, 0x86, 0x12,
+	0x37, 0xd7, 0x50, 0x59, 0x19, 0x8a, 0xd9, 0x95, 0x61, 0x0d, 0x10, 0x3b, 0x9f, 0x20, 0x05, 0xf6,
+	0x46, 0x99, 0x35, 0x02, 0x6f, 0xc6, 0xa9, 0x89, 0x4b, 0x8f, 0x2d, 0x00, 0x76, 0xfb, 0xa2, 0x16,
+	0x95, 0x2c, 0x15, 0xc2, 0xeb, 0xb0, 0xa0, 0xf0, 0xd9, 0xfd, 0xbc, 0x7d, 0x1e, 0x25, 0xd1, 0x13,
+	0x17, 0xdd, 0x80, 0x86, 0x80, 0xd4, 0xbd, 0x74, 0x10, 0xff, 0x5c, 0x80, 0xa6, 0x65, 0x8f, 0x7b,
+	0xfe, 0xc8, 0x99, 0x98, 0x47, 0xc3, 0x53, 0x06, 0x46, 0x20, 0x83, 0x07, 0x1d, 0xff, 0x52, 0x14,
+	0x2c, 0xe5, 0x54, 0xb0, 0xe9, 0xc4, 0x0a, 0xb6, 0xa1, 0x6b, 0x92, 0x7f, 0x72, 0xf8, 0x19, 0x54,
+	0xcf, 0xaf, 0x80, 0xd6, 0x42, 0x61, 0xc4, 0xc5, 0x2f, 0xa0, 0x76, 0xde, 0xe5, 0xb3, 0xa1, 0x88,
+	0x24, 0x2e, 0x5e, 0x85, 0x0b, 0x3b, 0xdb, 0xca, 0xc1, 0x65, 0x1d, 0xf1, 0x9d, 0x28, 0xed, 0xa9,
+	0x02, 0x69, 0x0d, 0x90, 0xc6, 0x65, 0x7b, 0x59, 0x7b, 0x3c, 0x88, 0x53, 0x6b, 0x41, 0xe4, 0x25,
+	0x05, 0x51, 0x00, 0xe2, 0xff, 0xc1, 0x3c, 0xe7, 0xa5, 0xc2, 0x58, 0x9a, 0x67, 0x6d, 0xf5, 0x59,
+	0x02, 0x39, 0x71, 0x69, 0x3a, 0xb3, 0xdf, 0x72, 0x9b, 0xf0, 0x1b, 0xaf, 0xc1, 0x02, 0x67, 0xe9,
+	0x92, 0xa1, 0xe9, 0x4c, 0x7c, 0x9b, 0xc5, 0x40, 0xca, 0xcd, 0x7a, 0x3f, 0x89, 0x9a, 0xb8, 0xe2,
+	0xda, 0x2e, 0x64, 0x5c, 0xdb, 0x1d, 0xa8, 0xed, 0x6c, 0xe7, 0x1f, 0xbc, 0x01, 0x15, 0xe1, 0x6a,
+	0x7e, 0xe0, 0xe1, 0x37, 0x3d, 0xe8, 0x50, 0x04, 0x71, 0xb1, 0x09, 0x8d, 0x9d, 0xed, 0xd3, 0x04,
+	0x53, 0x96, 0xcc, 0x96, 0x26, 0x84, 0xb8, 0x78, 0x13, 0xaa, 0x3b, 0xdb, 0xa2, 0x4d, 0xb9, 0x05,
+	0x65, 0x6e, 0x65, 0x9a, 0x6d, 0x62, 0x9d, 0x46, 0x39, 0xe7, 0x23, 0x2e, 0x7e, 0x05, 0x65, 0x21,
+	0x22, 0x2f, 0xe9, 0x95, 0x2d, 0x8a, 0x39, 0x5b, 0xbc, 0xe6, 0x52, 0x4f, 0x51, 0x7a, 0xd3, 0xee,
+	0x82, 0xf0, 0x58, 0x4b, 0xea, 0xb1, 0x36, 0xa0, 0xf6, 0xc4, 0x9e, 0x88, 0xf0, 0xc2, 0xd7, 0x95,
+	0xcf, 0xd4, 0x26, 0xeb, 0x1e, 0x2c, 0xe9, 0x91, 0xa6, 0xdc, 0xcc, 0x57, 0xa1, 0x1a, 0xec, 0x27,
+	0x23, 0x4e, 0x02, 0x78, 0x17, 0x16, 0x55, 0x86, 0xce, 0xa4, 0x2f, 0x2f, 0xaa, 0x68, 0xaf, 0xaa,
+	0x8b, 0x2a, 0x46, 0x45, 0xbd, 0x4c, 0x53, 0x82, 0xb8, 0x68, 0x0b, 0xca, 0xd4, 0x7d, 0xb2, 0x31,
+	0xfd, 0x97, 0xe2, 0xd8, 0xf8, 0xee, 0x96, 0xa0, 0xc6, 0x4f, 0x01, 0xe8, 0x0d, 0xd7, 0x25, 0xc3,
+	0x5c, 0x5b, 0x72, 0xda, 0xe4, 0xbb, 0x52, 0xd2, 0x59, 0x1a, 0xe5, 0xaf, 0xa0, 0xce, 0xd9, 0x82,
+	0x74, 0xff, 0x18, 0x15, 0x56, 0x55, 0x59, 0x39, 0xb5, 0xe0, 0x11, 0xd4, 0x69, 0x7c, 0xe5, 0x95,
+	0x99, 0x94, 0xde, 0xb3, 0xa9, 0x72, 0x13, 0x97, 0x4a, 0xdb, 0xb1, 0xc7, 0xb6, 0x6f, 0x73, 0x47,
+	0x9e, 0x59, 0x9a, 0xe4, 0x26, 0x2e, 0xfe, 0x3f, 0xcc, 0x71, 0x3b, 0x94, 0x22, 0x65, 0x40, 0xe5,
+	0x38, 0x62, 0xcc, 0xb1, 0x34, 0x26, 0xca, 0x70, 0x96, 0x23, 0xf8, 0x1c, 0xe6, 0xb8, 0x31, 0xca,
+	0x76, 0x67, 0xa8, 0x06, 0xf3, 0x31, 0x7e, 0xe2, 0xe2, 0x2d, 0xda, 0x3a, 0x91, 0xa3, 0xb3, 0x3b,
+	0xa3, 0xca, 0x19, 0x89, 0x4b, 0xfb, 0x75, 0xfa, 0x73, 0xfb, 0x03, 0xeb, 0xbc, 0xf7, 0xa1, 0x9a,
+	0xdb, 0xe2, 0xd3, 0xbb, 0x54, 0x1f, 0x0c, 0xb9, 0xf8, 0x19, 0x2b, 0x86, 0xd3, 0x2a, 0x26, 0xa7,
+	0x81, 0x1b, 0x00, 0xa7, 0x18, 0x06, 0xea, 0x92, 0x8a, 0xb8, 0x78, 0x03, 0x2e, 0x9a, 0xa6, 0x67,
+	0xf7, 0x7c, 0x9b, 0x8b, 0xf5, 0x3d, 0xbb, 0x77, 0x9c, 0x35, 0x19, 0x9b, 0xb0, 0x98, 0xcc, 0x90,
+	0xa4, 0x77, 0x21, 0x45, 0xef, 0x37, 0x30, 0x1b, 0x7c, 0xd2, 0xca, 0x48, 0x3d, 0xaf, 0xa9, 0xaa,
+	0x20, 0xc9, 0x1e, 0x46, 0x18, 0xea, 0x01, 0x7f, 0xd8, 0x68, 0xd1, 0x68, 0xd2, 0x30, 0x7c, 0x08,
+	0x65, 0x93, 0x6f, 0x12, 0x25, 0x0f, 0xb6, 0xd1, 0xb0, 0x88, 0x22, 0xc5, 0x74, 0x45, 0xb4, 0x52,
+	0xdc, 0x82, 0x86, 0x3e, 0x14, 0xe9, 0x00, 0x71, 0xdb, 0x7f, 0x14, 0xa1, 0x32, 0xe0, 0xaf, 0x01,
+	0x68, 0x0d, 0xa6, 0x69, 0x94, 0xa3, 0x0b, 0x22, 0x12, 0xc5, 0x60, 0x6f, 0x44, 0x10, 0xe2, 0xe2,
+	0x29, 0x46, 0xed, 0x10, 0x5f, 0xa5, 0x0e, 0x6e, 0x29, 0x23, 0x82, 0x30, 0xea, 0xb6, 0x68, 0x47,
+	0x11, 0x0a, 0x57, 0xc3, 0xcb, 0xd6, 0x88, 0x61, 0x8c, 0xe7, 0x1e, 0x54, 0xc4, 0x65, 0x8a, 0x16,
+	0x42, 0x0a, 0xe5, 0x92, 0x36, 0x12, 0x50, 0xa1, 0x1b, 0x9d, 0x5c, 0x15, 0xdd, 0xf8, 0x08, 0x6c,
+	0x44, 0x10, 0x46, 0xfd, 0x18, 0x40, 0x7a, 0x05, 0x19, 0x82, 0x22, 0x3e, 0x86, 0x1a, 0xa9, 0x6b,
+	0x54, 0x4e, 0xdb, 0x82, 0x9a, 0xf0, 0x65, 0x77, 0x32, 0x44, 0x26, 0x1f, 0x14, 0xbb, 0x1f, 0xc4,
+	0x7b, 0x0b, 0xba, 0x14, 0xee, 0xae, 0xbf, 0xd6, 0x18, 0x8b, 0xd2, 0x01, 0xca, 0xdb, 0x0c, 0x9e,
+	0x6a, 0xff, 0x5a, 0x84, 0xe6, 0x40, 0x0b, 0x50, 0xb4, 0x0b, 0xe8, 0x30, 0x16, 0xe3, 0xe8, 0x9a,
+	0x14, 0x9d, 0x94, 0x00, 0x46, 0x58, 0x5e, 0x78, 0xd8, 0xe1, 0xa9, 0x8d, 0x02, 0xba, 0x0b, 0x65,
+	0x9e, 0x6e, 0x68, 0x3e, 0x5c, 0x97, 0x69, 0x6a, 0xc4, 0x41, 0xe6, 0xb0, 0x87, 0x50, 0x0d, 0x9f,
+	0x9f, 0x90, 0x54, 0x5d, 0x7d, 0xbb, 0x32, 0x92, 0x60, 0xc6, 0x6c, 0x69, 0xde, 0x5e, 0xd6, 0x3c,
+	0x9a, 0x30, 0xc8, 0x1b, 0x39, 0x14, 0xcc, 0xf3, 0x7d, 0x98, 0xd3, 0x9d, 0x44, 0xfd, 0xbf, 0x0f,
+	0x8b, 0xaa, 0xff, 0xa5, 0x03, 0x53, 0x4f, 0xe1, 0x8a, 0x7e, 0x0a, 0xda, 0xe3, 0x17, 0x9e, 0x6a,
+	0xff, 0x08, 0x65, 0xf7, 0x64, 0x3c, 0xa6, 0x22, 0x36, 0xa1, 0x1e, 0x9c, 0x01, 0xf7, 0x7e, 0xe8,
+	0x5d, 0x91, 0x31, 0x3a, 0x40, 0x95, 0x5c, 0x29, 0x6c, 0x14, 0xd0, 0x23, 0xcd, 0x78, 0xe9, 0x23,
+	0xcd, 0xe2, 0x24, 0x98, 0x99, 0x49, 0x15, 0x70, 0x88, 0x9f, 0xad, 0x00, 0x4f, 0x42, 0x1d, 0x38,
+	0x27, 0x05, 0x9e, 0x42, 0x93, 0xdd, 0x89, 0x4f, 0xec, 0x89, 0xed, 0xf5, 0x7c, 0x87, 0xea, 0x51,
+	0x11, 0xed, 0x9d, 0x0c, 0x21, 0xa5, 0xff, 0x33, 0xe2, 0x20, 0x93, 0xf4, 0x7b, 0x01, 0xaa, 0x03,
+	0x96, 0xb1, 0xd4, 0x9a, 0x67, 0x3c, 0x55, 0xe4, 0x14, 0x2e, 0xd3, 0x30, 0x3e, 0xcc, 0x1b, 0xa9,
+	0x6b, 0x2c, 0xc0, 0x36, 0xc2, 0x52, 0x33, 0x17, 0x86, 0x4e, 0x58, 0x31, 0xa2, 0x10, 0xe3, 0xd8,
+	0x54, 0x0a, 0x4d, 0xa8, 0xaf, 0x5a, 0x67, 0xe2, 0x20, 0x33, 0xe2, 0x97, 0x12, 0xd4, 0x06, 0x7c,
+	0x7e, 0xa4, 0x66, 0xbc, 0x80, 0xb9, 0xd8, 0x90, 0x8f, 0xae, 0x26, 0x28, 0x1b, 0xbe, 0x17, 0x18,
+	0x19, 0xab, 0x4c, 0xb5, 0xd7, 0x70, 0x89, 0xad, 0x04, 0x17, 0xe9, 0x39, 0x0a, 0xde, 0x80, 0xd9,
+	0x40, 0xa6, 0xf4, 0x52, 0x78, 0xfb, 0x1b, 0x51, 0x88, 0x71, 0xdc, 0x96, 0xc5, 0x22, 0xac, 0xd7,
+	0x4a, 0xad, 0x88, 0x61, 0x9f, 0xf8, 0x30, 0xbe, 0x81, 0x39, 0x2f, 0x7c, 0x98, 0xe8, 0x4d, 0x86,
+	0x36, 0x3d, 0x91, 0x9d, 0x48, 0x9a, 0x5c, 0x14, 0xbc, 0xfa, 0x6b, 0x8a, 0x91, 0x88, 0x8b, 0xa4,
+	0x69, 0x3b, 0xd0, 0x3a, 0x51, 0x86, 0x02, 0x5a, 0x5c, 0xbe, 0xe5, 0xef, 0x39, 0x91, 0x61, 0x41,
+	0xd6, 0xb3, 0xb4, 0x79, 0xc6, 0xc8, 0xa1, 0x60, 0xb6, 0xfc, 0x56, 0x80, 0xba, 0xba, 0x23, 0xda,
+	0x0a, 0x1e, 0xca, 0xba, 0x64, 0x28, 0x6f, 0x42, 0xb5, 0xad, 0x37, 0x12, 0x50, 0xe6, 0xcd, 0xad,
+	0x60, 0xcc, 0xd3, 0x19, 0x95, 0xbe, 0xdc, 0x48, 0x40, 0x19, 0xe3, 0x7d, 0xa8, 0x86, 0x3d, 0xb3,
+	0x64, 0x55, 0x9b, 0x70, 0x23, 0x01, 0x65, 0xda, 0xff, 0x59, 0x00, 0x38, 0x0c, 0x3a, 0x55, 0xaa,
+	0x7b, 0x47, 0xea, 0x7e, 0x39, 0xa2, 0xa5, 0xec, 0x87, 0x8d, 0xb4, 0x25, 0xa6, 0x4c, 0x47, 0x5a,
+	0x71, 0x39, 0xa2, 0x6f, 0xa2, 0x88, 0x58, 0xb7, 0xfc, 0x51, 0xf6, 0xfc, 0x5d, 0xa0, 0x85, 0x9f,
+	0x1c, 0x51, 0x63, 0x56, 0x69, 0x8f, 0x44, 0x8e, 0xd4, 0x82, 0xcf, 0x9a, 0x70, 0x43, 0x07, 0x3e,
+	0x65, 0x8a, 0x3d, 0x01, 0x14, 0xbf, 0xf2, 0x51, 0x38, 0xa0, 0x26, 0xb7, 0x03, 0x4d, 0xb1, 0x2c,
+	0xbb, 0x81, 0xf6, 0x5f, 0x25, 0x98, 0xe9, 0xbf, 0xa1, 0x56, 0x9a, 0x50, 0x53, 0xca, 0x06, 0x5a,
+	0x0a, 0x1d, 0x13, 0x79, 0x0b, 0x33, 0x52, 0x56, 0x98, 0x5e, 0xbb, 0xd0, 0xd0, 0x5e, 0xaa, 0x64,
+	0x49, 0x8f, 0x3f, 0x78, 0x19, 0xa9, 0x6b, 0x4c, 0xd4, 0x1e, 0x34, 0xf5, 0x6c, 0x41, 0x57, 0x22,
+	0xf4, 0xea, 0x93, 0x96, 0x91, 0xbe, 0xc8, 0xa4, 0xed, 0x8b, 0xc6, 0x2c, 0x0c, 0x11, 0x59, 0x4b,
+	0x93, 0xde, 0xaf, 0x8c, 0x8c, 0x55, 0x26, 0xf0, 0x4e, 0x58, 0xe4, 0xe6, 0x25, 0x65, 0x42, 0xc1,
+	0x52, 0x1f, 0x9c, 0xa6, 0xd0, 0x03, 0xa5, 0xd0, 0x2d, 0x4a, 0x12, 0xb5, 0xd4, 0x25, 0xc1, 0x8c,
+	0x77, 0x9d, 0x37, 0xdf, 0x73, 0x92, 0x40, 0x5c, 0xfc, 0x51, 0x88, 0xd2, 0xbf, 0x99, 0x65, 0xff,
+	0x69, 0xbc, 0xfd, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x25, 0x94, 0xb9, 0x59, 0x79, 0x1c, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -4428,10 +5029,8 @@ var _FollowedSvr_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RelationChangeSvrClient interface {
-	//关注
-	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowRsp, error)
-	//取关
-	UnFollow(ctx context.Context, in *UnFollowReq, opts ...grpc.CallOption) (*UnFollowRsp, error)
+	//建立双向stream，后续req和rsp通过此通道传送
+	CreateStream(ctx context.Context, opts ...grpc.CallOption) (RelationChangeSvr_CreateStreamClient, error)
 }
 
 type relationChangeSvrClient struct {
@@ -4442,97 +5041,93 @@ func NewRelationChangeSvrClient(cc *grpc.ClientConn) RelationChangeSvrClient {
 	return &relationChangeSvrClient{cc}
 }
 
-func (c *relationChangeSvrClient) Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowRsp, error) {
-	out := new(FollowRsp)
-	err := c.cc.Invoke(ctx, "/common.relationChangeSvr/Follow", in, out, opts...)
+func (c *relationChangeSvrClient) CreateStream(ctx context.Context, opts ...grpc.CallOption) (RelationChangeSvr_CreateStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_RelationChangeSvr_serviceDesc.Streams[0], "/common.relationChangeSvr/createStream", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &relationChangeSvrCreateStreamClient{stream}
+	return x, nil
 }
 
-func (c *relationChangeSvrClient) UnFollow(ctx context.Context, in *UnFollowReq, opts ...grpc.CallOption) (*UnFollowRsp, error) {
-	out := new(UnFollowRsp)
-	err := c.cc.Invoke(ctx, "/common.relationChangeSvr/UnFollow", in, out, opts...)
-	if err != nil {
+type RelationChangeSvr_CreateStreamClient interface {
+	Send(*RelationChgReq) error
+	Recv() (*RelationChgRsp, error)
+	grpc.ClientStream
+}
+
+type relationChangeSvrCreateStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *relationChangeSvrCreateStreamClient) Send(m *RelationChgReq) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *relationChangeSvrCreateStreamClient) Recv() (*RelationChgRsp, error) {
+	m := new(RelationChgRsp)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	return out, nil
+	return m, nil
 }
 
 // RelationChangeSvrServer is the server API for RelationChangeSvr service.
 type RelationChangeSvrServer interface {
-	//关注
-	Follow(context.Context, *FollowReq) (*FollowRsp, error)
-	//取关
-	UnFollow(context.Context, *UnFollowReq) (*UnFollowRsp, error)
+	//建立双向stream，后续req和rsp通过此通道传送
+	CreateStream(RelationChangeSvr_CreateStreamServer) error
 }
 
 // UnimplementedRelationChangeSvrServer can be embedded to have forward compatible implementations.
 type UnimplementedRelationChangeSvrServer struct {
 }
 
-func (*UnimplementedRelationChangeSvrServer) Follow(ctx context.Context, req *FollowReq) (*FollowRsp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
-}
-func (*UnimplementedRelationChangeSvrServer) UnFollow(ctx context.Context, req *UnFollowReq) (*UnFollowRsp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UnFollow not implemented")
+func (*UnimplementedRelationChangeSvrServer) CreateStream(srv RelationChangeSvr_CreateStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method CreateStream not implemented")
 }
 
 func RegisterRelationChangeSvrServer(s *grpc.Server, srv RelationChangeSvrServer) {
 	s.RegisterService(&_RelationChangeSvr_serviceDesc, srv)
 }
 
-func _RelationChangeSvr_Follow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RelationChangeSvrServer).Follow(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/common.relationChangeSvr/Follow",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelationChangeSvrServer).Follow(ctx, req.(*FollowReq))
-	}
-	return interceptor(ctx, in, info, handler)
+func _RelationChangeSvr_CreateStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(RelationChangeSvrServer).CreateStream(&relationChangeSvrCreateStreamServer{stream})
 }
 
-func _RelationChangeSvr_UnFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UnFollowReq)
-	if err := dec(in); err != nil {
+type RelationChangeSvr_CreateStreamServer interface {
+	Send(*RelationChgRsp) error
+	Recv() (*RelationChgReq, error)
+	grpc.ServerStream
+}
+
+type relationChangeSvrCreateStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *relationChangeSvrCreateStreamServer) Send(m *RelationChgRsp) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *relationChangeSvrCreateStreamServer) Recv() (*RelationChgReq, error) {
+	m := new(RelationChgReq)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	if interceptor == nil {
-		return srv.(RelationChangeSvrServer).UnFollow(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/common.relationChangeSvr/UnFollow",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelationChangeSvrServer).UnFollow(ctx, req.(*UnFollowReq))
-	}
-	return interceptor(ctx, in, info, handler)
+	return m, nil
 }
 
 var _RelationChangeSvr_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "common.relationChangeSvr",
 	HandlerType: (*RelationChangeSvrServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "Follow",
-			Handler:    _RelationChangeSvr_Follow_Handler,
-		},
-		{
-			MethodName: "UnFollow",
-			Handler:    _RelationChangeSvr_UnFollow_Handler,
+			StreamName:    "createStream",
+			Handler:       _RelationChangeSvr_CreateStream_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "common.proto",
 }
 
@@ -5117,5 +5712,293 @@ var _PushSvr_serviceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
+	Metadata: "common.proto",
+}
+
+// DbSvrClient is the client API for DbSvr service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type DbSvrClient interface {
+	QueryFollow(ctx context.Context, in *DBQueryFollowReq, opts ...grpc.CallOption) (*DBQueryFollowRsp, error)
+	QueryFollower(ctx context.Context, in *DBQueryFollowerReq, opts ...grpc.CallOption) (*DBQueryFollowerRsp, error)
+	QueryUserMsgId(ctx context.Context, in *DBQueryUserMsgIdReq, opts ...grpc.CallOption) (*DBQueryUserMsgIdRsp, error)
+	QueryMsgContent(ctx context.Context, in *DBQueryMsgContentReq, opts ...grpc.CallOption) (*DBQueryMsgContentRsp, error)
+	Follow(ctx context.Context, in *DBFollowReq, opts ...grpc.CallOption) (*DBFollowRsp, error)
+	UnFollow(ctx context.Context, in *DBUnFollowReq, opts ...grpc.CallOption) (*DBUnFollowRsp, error)
+	Post(ctx context.Context, in *DBPostReq, opts ...grpc.CallOption) (*DBPostRsp, error)
+}
+
+type dbSvrClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewDbSvrClient(cc *grpc.ClientConn) DbSvrClient {
+	return &dbSvrClient{cc}
+}
+
+func (c *dbSvrClient) QueryFollow(ctx context.Context, in *DBQueryFollowReq, opts ...grpc.CallOption) (*DBQueryFollowRsp, error) {
+	out := new(DBQueryFollowRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/QueryFollow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dbSvrClient) QueryFollower(ctx context.Context, in *DBQueryFollowerReq, opts ...grpc.CallOption) (*DBQueryFollowerRsp, error) {
+	out := new(DBQueryFollowerRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/QueryFollower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dbSvrClient) QueryUserMsgId(ctx context.Context, in *DBQueryUserMsgIdReq, opts ...grpc.CallOption) (*DBQueryUserMsgIdRsp, error) {
+	out := new(DBQueryUserMsgIdRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/QueryUserMsgId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dbSvrClient) QueryMsgContent(ctx context.Context, in *DBQueryMsgContentReq, opts ...grpc.CallOption) (*DBQueryMsgContentRsp, error) {
+	out := new(DBQueryMsgContentRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/QueryMsgContent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dbSvrClient) Follow(ctx context.Context, in *DBFollowReq, opts ...grpc.CallOption) (*DBFollowRsp, error) {
+	out := new(DBFollowRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/Follow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dbSvrClient) UnFollow(ctx context.Context, in *DBUnFollowReq, opts ...grpc.CallOption) (*DBUnFollowRsp, error) {
+	out := new(DBUnFollowRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/UnFollow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dbSvrClient) Post(ctx context.Context, in *DBPostReq, opts ...grpc.CallOption) (*DBPostRsp, error) {
+	out := new(DBPostRsp)
+	err := c.cc.Invoke(ctx, "/common.dbSvr/Post", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DbSvrServer is the server API for DbSvr service.
+type DbSvrServer interface {
+	QueryFollow(context.Context, *DBQueryFollowReq) (*DBQueryFollowRsp, error)
+	QueryFollower(context.Context, *DBQueryFollowerReq) (*DBQueryFollowerRsp, error)
+	QueryUserMsgId(context.Context, *DBQueryUserMsgIdReq) (*DBQueryUserMsgIdRsp, error)
+	QueryMsgContent(context.Context, *DBQueryMsgContentReq) (*DBQueryMsgContentRsp, error)
+	Follow(context.Context, *DBFollowReq) (*DBFollowRsp, error)
+	UnFollow(context.Context, *DBUnFollowReq) (*DBUnFollowRsp, error)
+	Post(context.Context, *DBPostReq) (*DBPostRsp, error)
+}
+
+// UnimplementedDbSvrServer can be embedded to have forward compatible implementations.
+type UnimplementedDbSvrServer struct {
+}
+
+func (*UnimplementedDbSvrServer) QueryFollow(ctx context.Context, req *DBQueryFollowReq) (*DBQueryFollowRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryFollow not implemented")
+}
+func (*UnimplementedDbSvrServer) QueryFollower(ctx context.Context, req *DBQueryFollowerReq) (*DBQueryFollowerRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryFollower not implemented")
+}
+func (*UnimplementedDbSvrServer) QueryUserMsgId(ctx context.Context, req *DBQueryUserMsgIdReq) (*DBQueryUserMsgIdRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryUserMsgId not implemented")
+}
+func (*UnimplementedDbSvrServer) QueryMsgContent(ctx context.Context, req *DBQueryMsgContentReq) (*DBQueryMsgContentRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryMsgContent not implemented")
+}
+func (*UnimplementedDbSvrServer) Follow(ctx context.Context, req *DBFollowReq) (*DBFollowRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
+}
+func (*UnimplementedDbSvrServer) UnFollow(ctx context.Context, req *DBUnFollowReq) (*DBUnFollowRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnFollow not implemented")
+}
+func (*UnimplementedDbSvrServer) Post(ctx context.Context, req *DBPostReq) (*DBPostRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Post not implemented")
+}
+
+func RegisterDbSvrServer(s *grpc.Server, srv DbSvrServer) {
+	s.RegisterService(&_DbSvr_serviceDesc, srv)
+}
+
+func _DbSvr_QueryFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBQueryFollowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).QueryFollow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/QueryFollow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).QueryFollow(ctx, req.(*DBQueryFollowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DbSvr_QueryFollower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBQueryFollowerReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).QueryFollower(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/QueryFollower",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).QueryFollower(ctx, req.(*DBQueryFollowerReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DbSvr_QueryUserMsgId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBQueryUserMsgIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).QueryUserMsgId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/QueryUserMsgId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).QueryUserMsgId(ctx, req.(*DBQueryUserMsgIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DbSvr_QueryMsgContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBQueryMsgContentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).QueryMsgContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/QueryMsgContent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).QueryMsgContent(ctx, req.(*DBQueryMsgContentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DbSvr_Follow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBFollowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).Follow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/Follow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).Follow(ctx, req.(*DBFollowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DbSvr_UnFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBUnFollowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).UnFollow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/UnFollow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).UnFollow(ctx, req.(*DBUnFollowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DbSvr_Post_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DBPostReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DbSvrServer).Post(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.dbSvr/Post",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DbSvrServer).Post(ctx, req.(*DBPostReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _DbSvr_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "common.dbSvr",
+	HandlerType: (*DbSvrServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "QueryFollow",
+			Handler:    _DbSvr_QueryFollow_Handler,
+		},
+		{
+			MethodName: "QueryFollower",
+			Handler:    _DbSvr_QueryFollower_Handler,
+		},
+		{
+			MethodName: "QueryUserMsgId",
+			Handler:    _DbSvr_QueryUserMsgId_Handler,
+		},
+		{
+			MethodName: "QueryMsgContent",
+			Handler:    _DbSvr_QueryMsgContent_Handler,
+		},
+		{
+			MethodName: "Follow",
+			Handler:    _DbSvr_Follow_Handler,
+		},
+		{
+			MethodName: "UnFollow",
+			Handler:    _DbSvr_UnFollow_Handler,
+		},
+		{
+			MethodName: "Post",
+			Handler:    _DbSvr_Post_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "common.proto",
 }

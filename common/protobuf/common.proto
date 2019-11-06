@@ -127,10 +127,9 @@ service followedSvr {
 
 //relationChangeSvr/////////////////////////////////////////////////////////////////////////////////////////////////
 service relationChangeSvr {
-    //关注
-    rpc Follow (FollowReq) returns (FollowRsp) {}
-    //取关
-    rpc UnFollow (UnFollowReq) returns (UnFollowRsp) {}
+
+    //建立双向stream，后续req和rsp通过此通道传送
+    rpc createStream(stream RelationChgReq) returns (stream RelationChgRsp) {}
 }
 
 //userMsgIdSvrMng/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,6 +167,17 @@ service pushSvr {
     rpc Offline(OfflineReq) returns (OfflineRsp) {}
     //frontNotifySvr建立服务端流式stream，接收notify
     rpc CreateNotifyStream(CreateNotifyStreamReq) returns (stream Notify) {}
+}
+
+//dbSvr/////////////////////////////////////////////////////////////////////////////////////////////////
+service dbSvr {
+    rpc QueryFollow (DBQueryFollowReq) returns (DBQueryFollowRsp) {}
+    rpc QueryFollower (DBQueryFollowerReq) returns (DBQueryFollowerRsp) {}
+    rpc QueryUserMsgId (DBQueryUserMsgIdReq) returns (DBQueryUserMsgIdRsp) {}
+    rpc QueryMsgContent (DBQueryMsgContentReq) returns (DBQueryMsgContentRsp) {}
+    rpc Follow (DBFollowReq) returns (DBFollowRsp) {}
+    rpc UnFollow (DBUnFollowReq) returns (DBUnFollowRsp) {}
+    rpc Post (DBPostReq) returns (DBPostRsp) {}
 }
 
 //message/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,9 +332,20 @@ message QueryFollowedListRsp{
     repeated int64 FollowedIdArr = 1;
 }
 
+message RelationChgReq{
+    int64 frontReqId = 1;
+
+    bool Follow = 2; //false表示unfollow
+    int64 UserId = 3;
+    int64 FollowedUserId = 4;
+}
+message RelationChgRsp{
+    int64 frontReqId = 1;
+}
+
 message FollowReq{
-    int64 UserId = 2;
-    int64 FollowedUserId = 3;
+    int64 UserId = 1;
+    int64 FollowedUserId = 2;
 }
 message FollowRsp{
 }
@@ -336,10 +357,53 @@ message UnFollowReq{
 message UnFollowRsp{
 }
 
-message NewUserReq{
+
+message DBQueryFollowReq{
     int64 UserId = 1;
 }
-message NewUserRsp{
+message DBQueryFollowRsp{
+    repeated int64 FollowIdArr = 1;
+}
+
+message DBQueryFollowerReq{
+    int64 UserId = 1;
+}
+message DBQueryFollowerRsp{
+    repeated int64 FollowerIdArr = 1;
+}
+
+message DBQueryUserMsgIdReq{
+    int64 UserId = 1;
+}
+message DBQueryUserMsgIdRsp{
+    repeated int64 MsgIdArr = 1;
+}
+
+message DBQueryMsgContentReq{
+    int64 MsgId = 1;
+}
+message DBQueryMsgContentRsp{
+    MsgData Msg = 1;
+}
+
+message DBFollowReq{
+    int64 UserId = 1;
+    int64 FollowId = 2;
+}
+message DBFollowRsp{
+}
+
+message DBUnFollowReq{
+    int64 UserId = 1;
+    int64 FollowId = 2;
+}
+message DBUnFollowRsp{
+}
+
+message DBPostReq{
+    MsgData Content = 1;
+}
+message DBPostRsp{
 }
 
 message PostReq{

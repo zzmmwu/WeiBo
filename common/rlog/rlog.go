@@ -86,6 +86,12 @@ func StatPoint(pointId string, dataArr []StatPointData){
 }
 
 func Warning(level int, desc string, dataArr []StatPointData){
+	levStr := ""
+	if level == WarningLevelFatal{
+		levStr = "[!!!!!Fatal!!!!!] "
+	}
+	log.Printf("\n\n[!!!!!!Warning!!!!!!] %s [%s] %v \n\n", levStr, desc, dataArr)
+
 	var dataArrPB []*StatPointDataPB
 	for _, data := range dataArr{
 		d := StatPointDataPB{Name:data.Name, Data:data.Data}

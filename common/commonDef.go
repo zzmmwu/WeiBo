@@ -113,4 +113,5 @@ type DBTransUnFollowed struct{
 func FollowedColNameOfVIP(userId int64) string{
 	return fmt.Sprintf("FollowedVIP_%d", userId)
 }
+
 //DB end //////////////////////
