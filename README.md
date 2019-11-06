@@ -24,7 +24,7 @@
 
 ├─contentSvr			微博内容提取服务
 
-├─dbSvr			      dbSvr统一接入服务
+├─dbSvr			      db统一接入服务
 
 ├─dbTools
 
