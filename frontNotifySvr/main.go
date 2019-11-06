@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"io"
+	"sync/atomic"
 
 	//"io"
 
@@ -78,6 +79,9 @@ var gReqChan = make(chan *common.ReqCmdT, 10000)
 //客户端连接统计
 var gConnCounterHandle = grpcStatsHandler.ConnCounterHandler{}
 
+//发送通知计数
+var gSendNotifyCount int64
+
 func main(){
 	if len(os.Args)!=2 {
 		rlog.Fatalf("xxx configPath")
@@ -103,7 +107,9 @@ func main(){
 
 	go notifyRecvRoutine(configRefreshSyncChn)
 
-	go onlineProcRoutine()
+	for i:=0; i<4; i++ {
+		go onlineProcRoutine()
+	}
 
 	//开启数据打点routine
 	go statReportRoutine()
@@ -144,6 +150,9 @@ func statReportRoutine(){
 			data = rlog.StatPointData{Name:"onlineUserCount", Data:int64(onlineCount)}
 			dataArr = append(dataArr, data)
 
+			data = rlog.StatPointData{Name:"sendNotify", Data:gSendNotifyCount}
+			dataArr = append(dataArr, data)
+
 			data = rlog.StatPointData{Name:"onlineReqChanLen", Data:int64(len(gReqChan))}
 			dataArr = append(dataArr, data)
 
@@ -172,11 +181,13 @@ func connEndCallBack(connId int64){
 	}
 	//rlog.Printf("gConnId2userId.connId2userIdMap[%d]=userId=%d", connId, userId)
 
-
 	gUserIdOnlineDataMap.Lock()
-	defer gUserIdOnlineDataMap.Unlock()
+	offlineChn := gUserIdOnlineDataMap.dataMap[userId].offlineSyncChn
+	gUserIdOnlineDataMap.Unlock()
 
-	gUserIdOnlineDataMap.dataMap[userId].offlineSyncChn<- 1
+	if len(offlineChn) == 0{
+		offlineChn<- 1
+	}
 }
 
 func onlineProcRoutine(){
@@ -187,7 +198,7 @@ func onlineProcRoutine(){
 	for{
 		req, ok := <-gReqChan
 		if !ok{
-			rlog.Printf("<-gReqChan closed. shit")
+			rlog.Fatalf("<-gReqChan closed. shit")
 			return
 		}
 
@@ -414,6 +425,7 @@ func recvNotify(addr string, addr2ConnMap *addrConnMapT){
 				continue
 			}
 
+			atomic.AddInt64(&gSendNotifyCount, 1)
 			chn<- &pb.CNotify{NotifyUserId:notifyUserId, PostUserId:notify.PostUserId, MsgId:notify.MsgId}
 		}
 	}
@@ -452,11 +464,14 @@ func (s *serverT)CreateNotifyStream(in *pb.CCreateNotifyStreamReq, stream pb.Fro
 			if notifyChn == gUserIdOnlineDataMap.dataMap[userId].notifyChn{
 				//是我自己，删掉
 				delete(gUserIdOnlineDataMap.dataMap, userId)
+				gUserIdOnlineDataMap.Unlock()
+
 				//发送offline
 				gReqChan<- &common.ReqCmdT{ReqId:1, Cmd:common.CmdOffline, ReqMsg:common.ReqOffline{UserId:userId}}
 				rlog.Printf("idleTimer timeout. send CmdOffline, userId=%d", userId)
+			}else{
+				gUserIdOnlineDataMap.Unlock()
 			}
-			gUserIdOnlineDataMap.Unlock()
 
 			return errors.New("idle timeout")
 		case <-offlineSyncChn:
@@ -464,14 +479,15 @@ func (s *serverT)CreateNotifyStream(in *pb.CCreateNotifyStreamReq, stream pb.Fro
 			if notifyChn == gUserIdOnlineDataMap.dataMap[userId].notifyChn{
 				//是我自己，删掉
 				delete(gUserIdOnlineDataMap.dataMap, userId)
+				gUserIdOnlineDataMap.Unlock()
+
+
 				//发送offline
 				gReqChan<- &common.ReqCmdT{ReqId:1, Cmd:common.CmdOffline, ReqMsg:common.ReqOffline{UserId:userId}}
-
-				gUserIdOnlineDataMap.Unlock()
 				return nil
+			}else{
+				gUserIdOnlineDataMap.Unlock()
 			}
-			//不是我自己，不管
-			gUserIdOnlineDataMap.Unlock()
 		case notify, ok:= <-notifyChn:
 			if !ok {
 				rlog.Printf("notifyChn closed :( ")
@@ -483,14 +499,15 @@ func (s *serverT)CreateNotifyStream(in *pb.CCreateNotifyStreamReq, stream pb.Fro
 				if notifyChn == gUserIdOnlineDataMap.dataMap[userId].notifyChn{
 					//是我自己，删掉
 					delete(gUserIdOnlineDataMap.dataMap, userId)
+					gUserIdOnlineDataMap.Unlock()
+
 					//发送offline
 					gReqChan<- &common.ReqCmdT{ReqId:1, Cmd:common.CmdOffline, ReqMsg:common.ReqOffline{UserId:userId}}
 
-					gUserIdOnlineDataMap.Unlock()
 					return errors.New("send err")
+				}else{
+					gUserIdOnlineDataMap.Unlock()
 				}
-				//不是我自己，不管
-				gUserIdOnlineDataMap.Unlock()
 				return errors.New("send err")
 			}
 
@@ -501,9 +518,10 @@ func (s *serverT)CreateNotifyStream(in *pb.CCreateNotifyStreamReq, stream pb.Fro
 
 func (s *serverT) Offline(ctx context.Context, in *pb.COfflineReq) (*pb.COfflineRsp, error) {
 	gUserIdOnlineDataMap.Lock()
-	defer gUserIdOnlineDataMap.Unlock()
+	offlineChn := gUserIdOnlineDataMap.dataMap[in.UserId].offlineSyncChn
+	gUserIdOnlineDataMap.Unlock()
 
-	gUserIdOnlineDataMap.dataMap[in.UserId].offlineSyncChn<- 1
+	offlineChn<- 1
 
 	return &pb.COfflineRsp{}, nil
 }
@@ -511,12 +529,13 @@ func (s *serverT) Offline(ctx context.Context, in *pb.COfflineReq) (*pb.COffline
 func (s *serverT) HeartBeat(ctx context.Context, in *pb.CHeartBeatReq) (*pb.CHeartBeatRsp, error) {
 	//log.Printf("hearBeat userId=%d", in.UserId)
 	gUserIdOnlineDataMap.Lock()
-	defer gUserIdOnlineDataMap.Unlock()
 
 	timer := gUserIdOnlineDataMap.dataMap[in.UserId].idleTimer
 	if timer != nil{
 		timer.Reset(common.ClientMaxIdleSec*time.Second)
 	}
+
+	gUserIdOnlineDataMap.Unlock()
 
 	//上报online
 	gReqChan<- &common.ReqCmdT{ReqId:1, Cmd:common.CmdOnline, ReqMsg:common.ReqOnline{UserId:in.UserId, FrontNotifySvrId:gConfig.FrontNotifySvrId}}

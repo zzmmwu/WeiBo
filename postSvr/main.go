@@ -5,12 +5,9 @@
 package main
 
 import (
-	"WeiBo/common"
-	"WeiBo/common/dbConnPool"
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"io"
@@ -31,10 +28,7 @@ type configType struct {
 	RlogSvrAddr string `json: "rlogSvrAddr"`
 	ListenAddr string  `json: "listenAddr"`
 	MsgIdGenSvrAddr string `json: "msgIdGenSvrAddr"`
-	MongoDBUrl string `json: "mongoDBUrl"`
-	MongoDBName string `json: "mongoDBName"`
-	UserMsgIdColCount int `json: "userMsgIdColCount"`
-	ContentColCount int `json: "contentColCount"`
+	DBSvrAddr string `json: "dbSvrAddr"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
@@ -87,10 +81,6 @@ type postReqPack struct {
 }
 var gPostReqChn = make(chan *postReqPack, 10000)
 
-
-//db连接池
-var gDBConnPool = dbConnPool.MongoConnPool{}
-
 func main(){
 	if len(os.Args)!=2 {
 		rlog.Fatalf("xxx configPath")
@@ -110,18 +100,11 @@ func main(){
 
 	rlog.Init(gConfig.MyName, gConfig.RlogSvrAddr)
 
-	//
-	err = gDBConnPool.Init(200, gConfig.MongoDBUrl, "", "")
-	if err != nil{
-		rlog.Fatalf("%+v", err)
-	}
-	rlog.Printf("dbpool init successed")
-
 	//启动配置文件刷新routine
 	go startConfigRefresh(confPath)
 
 	//启动post routine群
-	for i:=0; i<1000; i++{
+	for i:=0; i<100; i++{
 		go postRoutine()
 	}
 
@@ -239,10 +222,17 @@ func postRspRecvRoutine(chn chan *pb.PostRsp, stream pb.PostSvr_CreateStreamServ
 	}
 }
 
+type dbClientT struct {
+	conn *grpc.ClientConn
+	client pb.DbSvrClient
+}
+
 func postRoutine(){
 
 	//服务器地址到链接的map
 	addr2ConnMap := make(map[string]grpcConn)
+
+	var dbClient dbClientT
 
 	for {
 		reqPack := <-gPostReqChn
@@ -261,7 +251,7 @@ func postRoutine(){
 
 		//先存DB
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		err = storeToDB(ctx, reqPack.Req.Content)
+		err = storeToDB(ctx, &dbClient, reqPack.Req.Content)
 		cancel()
 		if err != nil{
 			rlog.Printf("storeToDB failed. content=[%+v]", reqPack.Req.Content)
@@ -316,7 +306,7 @@ func genMsgId(addr2ConnMap map[string]grpcConn) (int64, error){
 				if err != nil {
 					rlog.Printf("connect MsgIdGenSvrAddr failed. [%+v]", err)
 					//连不上，视为服务down掉，忽略
-					return 0, errors.New("connect MsgIdGenSvrAddr failed.")
+					return 0, errors.New("connect MsgIdGenSvrAddr failed")
 				}
 				client := pb.NewMsgIdGeneratorClient(conn)
 				connData = grpcConn{Conn:conn, Client:client}
@@ -338,7 +328,7 @@ func genMsgId(addr2ConnMap map[string]grpcConn) (int64, error){
 		return rsp.MsgId, nil
 	}
 
-	return 0, errors.New("GenMsgId failed.")
+	return 0, errors.New("GenMsgId failed")
 }
 
 //获取地址对应的链接，如果还未链接则链接
@@ -403,97 +393,87 @@ func storeUsrMsgId(userId int64, msgId int64, addr2ConnMap map[string]grpcConn) 
 
 	return nil
 }
-func storeToDB(ctx context.Context, content *pb.MsgData) error{
-	client, err := gDBConnPool.WaitForOneConn(ctx)
-	if err != nil{
-		rlog.Printf("gDBConnPool.WaitForOneConn failed. err=[%+v]", err)
-		return err
-	}
-	defer gDBConnPool.ReturnConn(client)
-
-	//先写content
-	{
-		data := common.DBMsgContent{MsgId:content.MsgId, Text:content.Text, VideoUrl:content.VideoUrl, ImgUrlArr:content.ImgUrlArr}
-		colName := "MsgContent_"+fmt.Sprintf("%d", content.MsgId%int64(gConfig.ContentColCount))
-		collection := client.Database(gConfig.MongoDBName).Collection(colName)
-		_, err := collection.InsertOne(ctx, data)
-		if err != nil {
-			rlog.Printf("insert into %s failed. err=%+v", colName, err)
-			return err
-		}
-	}
-
-	//userMsgId
-	{
-		data := common.DBUserMsgId{UserId:content.UserId, MsgId:content.MsgId}
-		colName := "UserMsgId_"+fmt.Sprintf("%d", content.UserId%int64(gConfig.UserMsgIdColCount))
-		collection := client.Database(gConfig.MongoDBName).Collection(colName)
-		_, err := collection.InsertOne(ctx, data)
-		if err != nil {
-			rlog.Printf("insert into %s failed. err=%+v", colName, err)
-			return err
-		}
-	}
-
-	return nil
-}
-func storeContent(content *pb.MsgData, addr2ConnMap map[string]grpcConn) error{
-	msgId := content.MsgId
-
-	//根据msgId分片，找出所有对应的contentSvr
-	var contentSvrAddrArr []string
-	{
-		gContentSvrData.RLock()
-
-		index := msgId%int64(len(gContentSvrData.contentSvrArr))
-		//用值拷贝，防止引用用一个数组，gUserMsgIdSvrData中的数组是处于竞态环境
-		contentSvrAddrArr = make([]string, len(gContentSvrData.contentSvrArr[index].SvrAddrArr))
-		copy(contentSvrAddrArr, gContentSvrData.contentSvrArr[index].SvrAddrArr)
-
-		gContentSvrData.RUnlock()
-	}
-
-	//
-	for _, addr := range contentSvrAddrArr{
-		//允许重试一次
-		for i:=0; i<2; i++ {
-			//获取地址对应的链接
-			var connData grpcConn
-			{
-				var ok bool
-				connData, ok = addr2ConnMap[addr]
-				if !ok {
-					//还未链接则链接
-					conn, err := grpc.Dial(addr, grpc.WithInsecure())
-					if err != nil {
-						rlog.Printf("connect contentSvr failed. addr=[%s] [%+v]", addr, err)
-						//连不上，视为服务down掉，忽略
-						break
-					}
-					client := pb.NewContentSvrClient(conn)
-					connData = grpcConn{Conn: conn, Client: client}
-					addr2ConnMap[addr] = connData
-				}
-			}
-
-			//
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			_, err := connData.Client.(pb.ContentSvrClient).PostMsg(ctx, &pb.PostMsgContentReq{Content: content})
-			cancel()
+func storeToDB(ctx context.Context, dbClient *dbClientT, content *pb.MsgData) error{
+	//允许重试一次
+	for i:=0; i<2; i++{
+		if dbClient.conn == nil{
+			var err interface{}
+			dbClient.conn, err = grpc.Dial(gConfig.DBSvrAddr, grpc.WithInsecure())
 			if err != nil {
-				rlog.Printf("contentSvr PostMsg failed. addr=[%s] [%+v] content=[%+v]", addr, err, content)
-				//断开连接
-				_ = connData.Conn.Close()
-				delete(addr2ConnMap, addr)
-				//重试一次
-				time.Sleep(100*time.Millisecond)//等100ms
-				continue
+				rlog.Printf("connect frontSvr failed [%+v]", err)
+				break
 			}
+			dbClient.client = pb.NewDbSvrClient(dbClient.conn)
 		}
-	}
+		_, err := dbClient.client.Post(ctx, &pb.DBPostReq{Content:content})
+		if err != nil{
+			//重连一下
+			_ = dbClient.conn.Close()
+			dbClient.conn = nil
+			continue
+		}
 
-	return nil
+		return nil
+	}
+	return errors.New("store to db failed")
 }
+//func storeContent(content *pb.MsgData, addr2ConnMap map[string]grpcConn) error{
+//	msgId := content.MsgId
+//
+//	//根据msgId分片，找出所有对应的contentSvr
+//	var contentSvrAddrArr []string
+//	{
+//		gContentSvrData.RLock()
+//
+//		index := msgId%int64(len(gContentSvrData.contentSvrArr))
+//		//用值拷贝，防止引用用一个数组，gUserMsgIdSvrData中的数组是处于竞态环境
+//		contentSvrAddrArr = make([]string, len(gContentSvrData.contentSvrArr[index].SvrAddrArr))
+//		copy(contentSvrAddrArr, gContentSvrData.contentSvrArr[index].SvrAddrArr)
+//
+//		gContentSvrData.RUnlock()
+//	}
+//
+//	//
+//	for _, addr := range contentSvrAddrArr{
+//		//允许重试一次
+//		for i:=0; i<2; i++ {
+//			//获取地址对应的链接
+//			var connData grpcConn
+//			{
+//				var ok bool
+//				connData, ok = addr2ConnMap[addr]
+//				if !ok {
+//					//还未链接则链接
+//					conn, err := grpc.Dial(addr, grpc.WithInsecure())
+//					if err != nil {
+//						rlog.Printf("connect contentSvr failed. addr=[%s] [%+v]", addr, err)
+//						//连不上，视为服务down掉，忽略
+//						break
+//					}
+//					client := pb.NewContentSvrClient(conn)
+//					connData = grpcConn{Conn: conn, Client: client}
+//					addr2ConnMap[addr] = connData
+//				}
+//			}
+//
+//			//
+//			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+//			_, err := connData.Client.(pb.ContentSvrClient).PostMsg(ctx, &pb.PostMsgContentReq{Content: content})
+//			cancel()
+//			if err != nil {
+//				rlog.Printf("contentSvr PostMsg failed. addr=[%s] [%+v] content=[%+v]", addr, err, content)
+//				//断开连接
+//				_ = connData.Conn.Close()
+//				delete(addr2ConnMap, addr)
+//				//重试一次
+//				time.Sleep(100*time.Millisecond)//等100ms
+//				continue
+//			}
+//		}
+//	}
+//
+//	return nil
+//}
 func sendToPushSvr(userId int64, msgId int64, addr2ConnMap map[string]grpcConn) error{
 
 	//先把svr地址拷贝出来
@@ -502,6 +482,10 @@ func sendToPushSvr(userId int64, msgId int64, addr2ConnMap map[string]grpcConn) 
 	svrAddrArr := make([]string, len(gPushSvrData.SvrAddrArr))
 	copy(svrAddrArr, gPushSvrData.SvrAddrArr)
 	startSvrIndex := gPushSvrData.curIndex
+	gPushSvrData.curIndex++
+	if gPushSvrData.curIndex >= len(gPushSvrData.SvrAddrArr){
+		gPushSvrData.curIndex = 0
+	}
 	gPushSvrData.Unlock()
 
 	//

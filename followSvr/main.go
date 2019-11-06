@@ -6,10 +6,7 @@ package main
 
 
 import (
-	"WeiBo/common"
-	"WeiBo/common/dbConnPool"
-	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
+	"WeiBo/common/dbSvrConnPool"
 	"sync/atomic"
 
 	//"WeiBo/common"
@@ -29,18 +26,13 @@ import (
 
 //配置文件格式
 type configType struct {
-	MyName string `json: "myName"`
-	RlogSvrAddr string `json: "rlogSvrAddr"`
-	ListenAddr string  `json: "listenAddr"`
-	MongoDBUrl string `json: "mongoDBUrl"`
-	MongoDBName string `json: "mongoDBName"`
-	FollowColCount int `json: "followColCount"`
+	MyName         string `json: "myName"`
+	RlogSvrAddr    string `json: "rlogSvrAddr"`
+	ListenAddr     string `json: "listenAddr"`
+	DBSvrAddr         string `json: "dbSvrAddr"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
-
-//db连接池
-var gDBConnPool = dbConnPool.MongoConnPool{}
 
 //用户关注数据map
 const followHashMapSlotCount  = 1000000 //一百万slot
@@ -109,43 +101,44 @@ func (m *followHashMapT)getFollowArr(ctx context.Context, userId int64) []int64{
 }
 //返回userId对应的msgIdSlice，如果返回的ok不为true则表示userId不存在
 func (m *followHashMapT)loadUserFollowFromDB(ctx context.Context, userId int64) (map[int64]followInfoT, bool){
-	client, err := gDBConnPool.WaitForOneConn(ctx)
+	connData, err := gDBConnPool.WaitForOneConn(ctx)
 	if err != nil{
 		rlog.Printf("gDBConnPool.WaitForOneConn failed. err=[%+v]", err)
-		return nil, false
+		return map[int64]followInfoT{}, false
 	}
-	defer gDBConnPool.ReturnConn(client)
-
-	//分表后的colName
-	colName := fmt.Sprintf("Follow_%d", userId%int64(gConfig.FollowColCount))
-	collection := client.Database(gConfig.MongoDBName).Collection(colName)
-	//rlog.Printf("colName:%+s userId:%d", colName, userId)
-
-	var data common.DBFollow
-	filter := bson.D{{"userid", userId}}
-	cursor, err := collection.Find(ctx, filter)
-	if err != nil{
-		rlog.Printf("find userid=[%d] failed. err=[%+v]", userId, err)
-		return nil, false
-	}
-	if cursor.Err() != nil{
-		rlog.Printf("find userid=[%d] failed. err=[%+v]", userId, cursor.Err())
-		return nil, false
-	}
-	//
-	followMap := map[int64]followInfoT{}
-	for cursor.Next(ctx){
-		err = cursor.Decode(&data)
-		if err != nil {
-			rlog.Printf("[%+v]", err)
-			return nil, false
+	defer gDBConnPool.ReturnConn(connData)
+	dbSvrConn := connData.Conn
+	dbSvrClient := connData.Client
+	
+	//允许重试一次
+	for i:=0; i<2; i++{
+		if dbSvrConn == nil{
+			var err interface{}
+			dbSvrConn, err = grpc.Dial(gConfig.DBSvrAddr, grpc.WithInsecure())
+			if err != nil {
+				rlog.Printf("connect frontSvr failed [%+v]", err)
+				break
+			}
+			dbSvrClient = pb.NewDbSvrClient(dbSvrConn)
 		}
-		//rlog.Printf("cursor:[%+v", cursor)
-		//rlog.Printf("DBFollow data:[%+v", data)
-		followMap[data.FollowId] = followInfoT{followTime:data.FollowTime}
+		rsp, err := dbSvrClient.QueryFollow(ctx, &pb.DBQueryFollowReq{UserId:userId})
+		if err != nil{
+			//重连一下
+			_ = dbSvrConn.Close()
+			dbSvrConn = nil
+			continue
+		}
+
+		//
+		followMap := map[int64]followInfoT{}
+		for _, followerId := range rsp.FollowIdArr{
+			followMap[followerId] =followInfoT{}
+		}
+
+		return followMap, true
 	}
 
-	return followMap, true
+	return map[int64]followInfoT{}, false
 }
 func (m *followHashMapT)follow(userId int64, followedId int64){
 	slot := m.slots[userId%followHashMapSlotCount]
@@ -179,6 +172,8 @@ func (m *followHashMapT)unFollow(userId int64, followedId int64){
 	atomic.AddInt64(&m.followIdCount, -1)
 }
 
+//db连接池
+var gDBConnPool = dbSvrConnPool.DBSvrConnPool{}
 
 func main(){
 	if len(os.Args)!=2 {
@@ -200,11 +195,11 @@ func main(){
 	rlog.Init(gConfig.MyName, gConfig.RlogSvrAddr)
 
 	//
-	err = gDBConnPool.Init(200, gConfig.MongoDBUrl, "", "")
+	err = gDBConnPool.Init(200, gConfig.DBSvrAddr)
 	if err != nil{
 		rlog.Fatalf("%+v", err)
 	}
-	rlog.Printf("dbpool init successed")
+	rlog.Printf("dbPool init success")
 
 	//
 	gFollowHashMap.init()

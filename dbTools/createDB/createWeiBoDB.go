@@ -118,6 +118,7 @@ func createMsgContentCol(client *mongo.Client){
 	}
 }
 
+
 //follow表：
 //按照id分成300个表。用户id和关注人id建复合索引
 func createFollowCol(client *mongo.Client){

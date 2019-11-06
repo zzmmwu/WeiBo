@@ -62,8 +62,14 @@ func main(){
 	for i:= gStartUserId+int64(gOnlineCount); i<=gEndUserId; i++{
 		gOfflineUserIdCtrl.offLineUserIdMap = append(gOfflineUserIdCtrl.offLineUserIdMap, i)
 	}
+	var tempCount = 0
 	for i:=0; i<gOnlineCount; i++{
 		go clientRountine(gStartUserId + int64(i))
+		tempCount++
+		if tempCount == 100{
+			tempCount = 0
+			time.Sleep(1*time.Second)
+		}
 	}
 
 	//post
@@ -99,6 +105,7 @@ func clientRountine(userId int64){
 		notifyConn, notifyClient, err := connNotifySvr(userId)
 		if err != nil{
 			log.Printf("connNotifySvr failed. err=[%v]", err)
+			return
 		}
 		//心跳
 		go func(){
@@ -124,7 +131,7 @@ func clientRountine(userId int64){
 			for {
 				notify, err := stream.Recv()
 				if err != nil {
-					log.Printf("notify recv failed. err=[%+v]", err)
+					//log.Printf("notify recv failed. err=[%+v]", err)
 					return
 				}
 				log.Printf("notify recved. [%+v]", notify)
@@ -135,6 +142,7 @@ func clientRountine(userId int64){
 		frontConn, frontClient, err := connFrontSvr(userId)
 		if err != nil{
 			log.Printf("connFrontSvr failed. err=[%v]", err)
+			return
 		}
 		//pull
 		go func(){
@@ -181,7 +189,7 @@ func clientRountine(userId int64){
 
 		//下线定时
 		//随机一个在线时长
-		onlineTime := time.Duration(rand.Intn(10) + 1)*time.Minute
+		onlineTime := time.Duration(rand.Intn(10*60) + 60)*time.Second
 		offlineTimer := time.NewTimer(onlineTime)
 		select {
 		case <-offlineTimer.C:
@@ -247,6 +255,7 @@ func connFrontSvr(userId int64) (*grpc.ClientConn, pb.FrontSvrClient, error){
 		cancel()
 		if err != nil{
 			log.Printf("QueryMyFrontSvr failed. [%+v]", err)
+			return nil, nil, err
 		}
 		frontAddr = rspAdr.Addr
 		//

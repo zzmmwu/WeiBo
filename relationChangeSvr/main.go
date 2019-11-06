@@ -6,28 +6,17 @@ package main
 
 
 import (
-	"WeiBo/common"
-	"WeiBo/common/dbConnPool"
-	"errors"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"sync/atomic"
-
-	//"io"
-
-	//"WeiBo/common"
 	"context"
 	"encoding/json"
-	//"google.golang.org/grpc/keepalive"
-	"io/ioutil"
-	//"log"
-	"net"
-	//"sync"
-	"time"
-	"fmt"
+	"errors"
 	"google.golang.org/grpc"
+	"io"
+	"io/ioutil"
+	"net"
 	"os"
+	"sync/atomic"
+	"time"
+
 	pb "WeiBo/common/protobuf"
 	"WeiBo/common/rlog"
 )
@@ -39,17 +28,10 @@ type configType struct {
 	ListenAddr string  `json: "listenAddr"`
 	FollowSvrAddr string `json: "followSvrAddr"`
 	FollowedSvrAddr string `json: "followedSvrAddr"`
-	MongoDBUrl string `json: "mongoDBUrl"`
-	MongoDBName string `json: "mongoDBName"`
-	FollowColCount int `json: "followColCount"`
-	UserLevelColCount int `json: "userLevelColCount"`
-	FollowedColCount int `json: "followedColCount"`
+	DBSvrAddr string `json: "dbSvrAddr"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
-
-//db连接池
-var gDBConnPool = dbConnPool.MongoConnPool{}
 
 //req的计数器，为线程安全请用atomic.AddUint64()进行操作
 var gReqFollowCounter int64
@@ -58,6 +40,14 @@ var gReqUnFollowCounter int64
 var gRspFollowCounter int64
 var gRspUnFollowCounter int64
 
+
+
+//follow/unfollow请求内部输送管道，所有请求都汇聚到这个管道
+type reqPack struct {
+	RspChn chan *pb.RelationChgRsp
+	Req *pb.RelationChgReq
+}
+var gReqChn = make(chan *reqPack, 10000)
 
 func main(){
 	if len(os.Args)!=2 {
@@ -79,11 +69,9 @@ func main(){
 	rlog.Init(gConfig.MyName, gConfig.RlogSvrAddr)
 
 	//
-	err = gDBConnPool.Init(200, gConfig.MongoDBUrl, "", "")
-	if err != nil{
-		rlog.Fatalf("%+v", err)
+	for i:=0; i<100; i++{
+		go procRoutine()
 	}
-	rlog.Printf("dbpool init successed")
 
 	//开启数据打点routine
 	go statReportRoutine()
@@ -119,6 +107,9 @@ func statReportRoutine(){
 			dataArr = append(dataArr, data)
 			data = rlog.StatPointData{Name:"rspUnFollowCount", Data:gRspUnFollowCounter}
 			dataArr = append(dataArr, data)
+
+			data = rlog.StatPointData{Name:"reqChanLen", Data:int64(len(gReqChn))}
+			dataArr = append(dataArr, data)
 		}
 		rlog.StatPoint("totalReport", dataArr)
 	}
@@ -127,267 +118,43 @@ func statReportRoutine(){
 //gRpc proto///////////////////////////////////////////
 type serverT struct{}
 
-func (s *serverT) Follow(ctx context.Context, in *pb.FollowReq) (*pb.FollowRsp, error) {
-	//统计计数
-	atomic.AddInt64(&gReqFollowCounter, 1)
+func (s *serverT) CreateStream(stream pb.RelationChangeSvr_CreateStreamServer) error {
+	//创建rsp接受管道
+	rspChn := make(chan *pb.RelationChgRsp, 1000)
+	//独立一个routine处理回复
+	reqEofSyncChn := make(chan int, 1)
+	noMoreRspSyncChn := make(chan int, 1)
+	go relChgRspRecvRoutine(rspChn, stream, reqEofSyncChn, noMoreRspSyncChn)
 
-	//rlog.Printf("Follow. in=[%+v]", in)
-	//DB
-	{
-		client, err := gDBConnPool.WaitForOneConn(ctx)
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF{
+			//对方不再发req了
+			rlog.Printf("relationChangeSvr recv req EOF")
+			break
+		}
 		if err != nil{
-			rlog.Printf("gDBConnPool.WaitForOneConn failed. err=[%+v]", err)
-			return nil, err
-		}
-		defer gDBConnPool.ReturnConn(client)
-
-		//先改followed表
-		{
-			//先查询followedColName
-			followedColName := ""
-			{
-				filter := bson.D{{"userid", in.FollowedUserId}}
-				colName := "UserLevel_" + fmt.Sprintf("%d", in.FollowedUserId%int64(gConfig.UserLevelColCount))
-				//rlog.Printf("colName=%s", colName)
-				levelCol := client.Database(gConfig.MongoDBName).Collection(colName)
-				result := levelCol.FindOne(ctx, filter)
-
-				var levelData common.DBUserLevel
-
-				if result.Err() == mongo.ErrNoDocuments {
-					//按level 0
-					followedColName = "Followed_" + fmt.Sprintf("0_%d", in.FollowedUserId%int64(gConfig.FollowedColCount))
-					//rlog.Printf("ErrNoDocuments. followedColName=%s", followedColName)
-				} else {
-					if result.Err() != nil {
-						rlog.Printf("[%+v]", result.Err())
-						return nil, result.Err()
-					}
-
-					err = result.Decode(&levelData)
-					if err != nil {
-						rlog.Printf("[%+v]", err)
-						return nil, err
-					}
-
-					//
-					if levelData.Level <common.UserLevelSuper {
-						followedColName = "Followed_" + fmt.Sprintf("%d_%d", levelData.Level, in.FollowedUserId%int64(gConfig.FollowedColCount))
-					} else {
-						//超V，单独一张表
-						followedColName = common.FollowedColNameOfVIP(in.FollowedUserId)
-					}
-				}
-				if !levelData.InTrans {
-					//粉丝数加一
-					filter := bson.D{{"userid", in.FollowedUserId}}
-					levelData.FollowerCount++
-					upsert := true
-					_, err := levelCol.UpdateOne(ctx, filter, bson.D{
-						{
-							"$inc", bson.D{{"followercount", 1}},
-						},
-						{
-							"$setOnInsert", bson.D{{"level", 0}, {"intrans", false}, {"transbegintime", 0}},
-						},
-					}, &options.UpdateOptions{Upsert: &upsert})
-					if err != nil {
-						rlog.Printf("followed update failed. err=[%+v]", err)
-						return nil, err
-					}
-					//rlog.Printf("updatereault=[%+v]", result)
-
-				} else {
-					//该user正在数据转移，插入临时表
-					followedColName = "TransFollowed"
-				}
-			}
-
-			//rlog.Printf("followedColName=%s", followedColName)
-
-			//插入
-			{
-				filter := bson.D{{"userid", in.FollowedUserId}, {"followedid", in.UserId}}
-				data := bson.D{{"userid", in.FollowedUserId}, {"followedid", in.UserId}, {"followtime", time.Now().Unix()}}
-				collection := client.Database(gConfig.MongoDBName).Collection(followedColName)
-				upsert := true
-				_, err := collection.UpdateOne(ctx, filter, bson.D{{"$set", data}}, &options.UpdateOptions{Upsert:&upsert})
-				if err != nil{
-					rlog.Printf("followed update failed. err=[%+v]", err)
-					return nil, err
-				}
-				//rlog.Printf("updatereault=[%+v]", result)
-			}
+			rlog.Printf("relationChangeSvr recv err.[%+v]", err)
+			break
 		}
 
-		//再改follow表
-		{
+		if req.FrontReqId == 0 {
+			//如果是心跳包（空包）则直接返回
+			rspChn<- &pb.RelationChgRsp{}
+		}else{
 			//
-			colName := fmt.Sprintf("Follow_%d", in.UserId%int64(gConfig.FollowColCount))
-			filter := bson.D{{"userid", in.UserId}, {"followid", in.FollowedUserId}}
-			data := bson.D{{"userid", in.UserId}, {"followid", in.FollowedUserId}, {"followtime", time.Now().Unix()}}
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			upsert := true
-			_, err := collection.UpdateOne(ctx, filter, bson.D{{"$set", data}}, &options.UpdateOptions{Upsert:&upsert})
-			if err != nil{
-				rlog.Printf("follow update failed. err=[%+v]", err)
-				return nil, err
-			}
+			reqPack := &reqPack{RspChn:rspChn, Req:req}
+			gReqChn<- reqPack
 		}
 	}
 
 	//
-	err := callFollowedSvr(ctx, true, in.UserId, in.FollowedUserId, &gFollowedSvrConn)
-	if err != nil{
-		rlog.Printf("callFollowedSvr failed. userid=%d followedId=%d. err=[%+v]", in.UserId, in.FollowedUserId, err)
-		return nil, err
-	}
-	//
-	err = callFollowSvr(ctx, true, in.UserId, in.FollowedUserId, &gFollowSvrConn)
-	if err != nil{
-		rlog.Printf("callFollowSvr failed. userid=%d followedId=%d. err=[%+v]", in.UserId, in.FollowedUserId, err)
-		return nil, err
-	}
-
-	//统计计数
-	atomic.AddInt64(&gRspFollowCounter, 1)
-	return &pb.FollowRsp{}, nil
+	reqEofSyncChn<- 1
+	//等rsp接受routine结束
+	<-noMoreRspSyncChn
+	return nil
 }
-func (s *serverT) UnFollow(ctx context.Context, in *pb.UnFollowReq) (*pb.UnFollowRsp, error) {
-	//统计计数
-	atomic.AddInt64(&gReqUnFollowCounter, 1)
 
-	//DB
-	{
-		client, err := gDBConnPool.WaitForOneConn(ctx)
-		if err != nil{
-			rlog.Printf("gDBConnPool.WaitForOneConn failed. err=[%+v]", err)
-			return nil, err
-		}
-		defer gDBConnPool.ReturnConn(client)
-
-		//先改follow表
-		{
-			//
-			colName := fmt.Sprintf("Follow_%d", in.UserId%int64(gConfig.FollowColCount))
-			filter := bson.D{{"userid", in.UserId}, {"followid", in.UnFollowedUserId}}
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.DeleteMany(ctx, filter)
-			if err != nil{
-				rlog.Printf("follow delete failed. err=[%+v]", err)
-				return nil, err
-			}
-		}
-
-		//再改followed表
-		{
-			//先查询followedColName
-			followedColName := ""
-			inTrans := false
-			{
-				filter := bson.D{{"userid", in.UnFollowedUserId}}
-				colName := "UserLevel_" + fmt.Sprintf("%d", in.UnFollowedUserId%int64(gConfig.UserLevelColCount))
-				//rlog.Printf("colName=%s", colName)
-				levelCol := client.Database(gConfig.MongoDBName).Collection(colName)
-				result := levelCol.FindOne(ctx, filter)
-
-				var levelData common.DBUserLevel
-
-				if result.Err() == mongo.ErrNoDocuments {
-					//按level 0
-					followedColName = "Followed_" + fmt.Sprintf("0_%d", in.UnFollowedUserId%int64(gConfig.FollowedColCount))
-					//rlog.Printf("ErrNoDocuments. followedColName=%s", followedColName)
-				} else {
-					if result.Err() != nil {
-						rlog.Printf("[%+v]", result.Err())
-						return nil, result.Err()
-					}
-
-					err = result.Decode(&levelData)
-					if err != nil {
-						rlog.Printf("[%+v]", err)
-						return nil, err
-					}
-
-					//
-					if levelData.Level <= 2 {
-						followedColName = "Followed_" + fmt.Sprintf("%d_%d", levelData.Level, in.UnFollowedUserId%int64(gConfig.FollowedColCount))
-					} else {
-						//大V，单独一张表
-						followedColName = common.FollowedColNameOfVIP(in.UnFollowedUserId)
-					}
-				}
-				if !levelData.InTrans {
-					inTrans = false
-
-					//粉丝数减一
-					filter := bson.D{{"userid", in.UnFollowedUserId}}
-					levelData.FollowerCount--
-					if levelData.FollowerCount < 0{
-						levelData.FollowerCount = 0
-					}
-					_, err := levelCol.UpdateOne(ctx, filter, bson.D{
-						{
-							"$inc", bson.D{{"followercount", -1}}, //需要防止减成负数
-						},
-					})
-					if err != nil {
-						rlog.Printf("followed update failed. err=[%+v]", err)
-						return nil, err
-					}
-					//rlog.Printf("updatereault=[%+v]", result)
-				} else {
-					inTrans = true
-
-					//该user正在数据转移，插入临时表
-					followedColName = "TransUnFollowed"
-					//插入
-					{
-						filter := bson.D{{"userid", in.UnFollowedUserId}, {"followedid", in.UserId}}
-						data := bson.D{{"userid", in.UnFollowedUserId}, {"followedid", in.UserId}}
-						collection := client.Database(gConfig.MongoDBName).Collection(followedColName)
-						upsert := true
-						_, err := collection.UpdateOne(ctx, filter, bson.D{{"$set", data}}, &options.UpdateOptions{Upsert:&upsert})
-						if err != nil{
-							rlog.Printf("followed update failed. err=[%+v]", err)
-							return nil, err
-						}
-						//rlog.Printf("updatereault=[%+v]", result)
-					}
-				}
-			}
-
-
-			//正常删除
-			if ! inTrans{
-				filter := bson.D{{"userid", in.UnFollowedUserId}, {"followedid", in.UserId}}
-				collection := client.Database(gConfig.MongoDBName).Collection(followedColName)
-				_, err := collection.DeleteMany(ctx, filter)
-				if err != nil{
-					rlog.Printf("followed delete failed. err=[%+v]", err)
-					return nil, err
-				}
-			}
-		}
-	}
-
-	//
-	err := callFollowedSvr(ctx, false, in.UserId, in.UnFollowedUserId, &gFollowedSvrConn)
-	if err != nil{
-		rlog.Printf("callFollowedSvr failed. userid=%d followedId=%d. err=[%+v]", in.UserId, in.UnFollowedUserId, err)
-		return nil, err
-	}
-	//
-	err = callFollowSvr(ctx, false, in.UserId, in.UnFollowedUserId, &gFollowSvrConn)
-	if err != nil{
-		rlog.Printf("callFollowSvr failed. userid=%d followedId=%d. err=[%+v]", in.UserId, in.UnFollowedUserId, err)
-		return nil, err
-	}
-
-	//统计计数
-	atomic.AddInt64(&gRspUnFollowCounter, 1)
-	return &pb.UnFollowRsp{}, nil
-}
 
 //gRpc proto end///////////////////////////////////////////
 
@@ -472,5 +239,174 @@ func callFollowedSvr(ctx context.Context, followNotUnFollow bool, userId int64, 
 	return errors.New("callFollowedSvr failed")
 }
 
+
+func Follow(ctx context.Context, dbSvrConn *grpc.ClientConn, dbClient pb.DbSvrClient, userId int64, followId int64) error {
+	//统计计数
+	atomic.AddInt64(&gReqFollowCounter, 1)
+
+	//rlog.Printf("Follow. in=[%+v]", in)
+	//DB
+	dbSuc := false
+	{
+		//允许重试一次
+		for i:=0; i<2; i++{
+			if dbSvrConn == nil{
+				var err interface{}
+				dbSvrConn, err = grpc.Dial(gConfig.DBSvrAddr, grpc.WithInsecure())
+				if err != nil {
+					rlog.Printf("connect frontSvr failed [%+v]", err)
+					break
+				}
+				dbClient = pb.NewDbSvrClient(dbSvrConn)
+			}
+			_, err := dbClient.Follow(ctx, &pb.DBFollowReq{UserId:userId, FollowId:followId})
+			if err != nil{
+				//重连一下
+				_ = dbSvrConn.Close()
+				dbSvrConn = nil
+				continue
+			}
+
+			dbSuc = true
+		}
+	}
+	if !dbSuc{
+		return errors.New("db failed")
+	}
+
+	//
+	err := callFollowedSvr(ctx, true, userId, followId, &gFollowedSvrConn)
+	if err != nil{
+		rlog.Printf("callFollowedSvr failed. userid=%d followedId=%d. err=[%+v]", userId, followId, err)
+		return err
+	}
+	//
+	err = callFollowSvr(ctx, true, userId, followId, &gFollowSvrConn)
+	if err != nil{
+		rlog.Printf("callFollowSvr failed. userid=%d followedId=%d. err=[%+v]", userId, followId, err)
+		return err
+	}
+
+	//统计计数
+	atomic.AddInt64(&gRspFollowCounter, 1)
+	return nil
+}
+func UnFollow(ctx context.Context, dbSvrConn *grpc.ClientConn, dbClient pb.DbSvrClient,userId int64, unFollowId int64) error {
+	//统计计数
+	atomic.AddInt64(&gReqUnFollowCounter, 1)
+
+	//DB
+	dbSuc := false
+	{
+		//允许重试一次
+		for i:=0; i<2; i++{
+			if dbSvrConn == nil{
+				var err interface{}
+				dbSvrConn, err = grpc.Dial(gConfig.DBSvrAddr, grpc.WithInsecure())
+				if err != nil {
+					rlog.Printf("connect frontSvr failed [%+v]", err)
+					break
+				}
+				dbClient = pb.NewDbSvrClient(dbSvrConn)
+			}
+			_, err := dbClient.UnFollow(ctx, &pb.DBUnFollowReq{UserId:userId, FollowId:unFollowId})
+			if err != nil{
+				//重连一下
+				_ = dbSvrConn.Close()
+				dbSvrConn = nil
+				continue
+			}
+
+			dbSuc = true
+		}
+	}
+	if !dbSuc{
+		return errors.New("db failed")
+	}
+
+	//
+	err := callFollowedSvr(ctx, false, userId, unFollowId, &gFollowedSvrConn)
+	if err != nil{
+		rlog.Printf("callFollowedSvr failed. userid=%d followedId=%d. err=[%+v]", userId, unFollowId, err)
+		return err
+	}
+	//
+	err = callFollowSvr(ctx, false, userId, unFollowId, &gFollowSvrConn)
+	if err != nil{
+		rlog.Printf("callFollowSvr failed. userid=%d followedId=%d. err=[%+v]", userId, unFollowId, err)
+		return err
+	}
+
+	//统计计数
+	atomic.AddInt64(&gRspUnFollowCounter, 1)
+	return nil
+}
+
+func procRoutine(){
+
+	var dbSvrConn *grpc.ClientConn
+	var dbClient pb.DbSvrClient
+
+	for{
+		reqPack := <-gReqChn
+
+		if reqPack.Req.Follow{
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+			err := Follow(ctx, dbSvrConn, dbClient, reqPack.Req.UserId, reqPack.Req.FollowedUserId)
+			cancel()
+			if err != nil{
+				//丢弃，让请求自己超时
+				continue
+			}
+		}else{
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+			err := UnFollow(ctx,dbSvrConn, dbClient, reqPack.Req.UserId, reqPack.Req.FollowedUserId)
+			cancel()
+			if err != nil{
+				//丢弃，让请求自己超时
+				continue
+			}
+		}
+
+		rsp := pb.RelationChgRsp{FrontReqId:reqPack.Req.FrontReqId}
+		reqPack.RspChn<- &rsp
+	}
+}
+
+
+//上如果30秒没有rsp了，且reqStream已经EOF则通知req routine
+func relChgRspRecvRoutine(chn chan *pb.RelationChgRsp, stream pb.RelationChangeSvr_CreateStreamServer, reqEofSyncChn chan int, noMoreRspSyncChn chan int){
+	//定时器时长，初始为100年
+	noRspTimerDur := 999999*time.Hour
+	//无rsp定时器
+	noRspTimer := time.NewTimer(noRspTimerDur)
+
+	for {
+		select {
+		case rsp:= <-chn:
+			//重置定时器
+			noRspTimer.Reset(noRspTimerDur)
+			//log.Printf("%+v", rsp)
+			err := stream.Send(rsp)
+			if err != nil{
+				rlog.Printf("relationChangeSvr send err.[%+v]", err)
+				//虽然此时stream已断，但chn中可能还会进来更多rsp需要处理，所以不能退出。需要把所有潜在的rsp处理完
+				//没有更多req过来了，30秒定时
+				noRspTimerDur = 30*time.Second
+				noRspTimer.Reset(noRspTimerDur)
+			}
+			break
+		case <-reqEofSyncChn:
+			//没有更多req过来了，30秒定时
+			rlog.Printf("<-reqEofSyncChn")
+			noRspTimerDur = 30*time.Second
+			noRspTimer.Reset(noRspTimerDur)
+			break
+		case <-noRspTimer.C:
+			noMoreRspSyncChn<- 1
+			return
+		}
+	}
+}
 
 

@@ -6,7 +6,7 @@ package main
 
 
 import (
-	"WeiBo/common"
+	//"WeiBo/common"
 	"context"
 	//"errors"
 	"fmt"
@@ -29,10 +29,6 @@ import (
 type configType struct {
 	MongoDBUrl string `json: "mongoDBUrl"`
 	MongoDBName string `json: "mongoDBName"`
-	FollowColCount int `json: "followColCount"`
-	UserLevelColCount int `json: "userLevelColCount"`
-	FollowedColCount int `json: "followedColCount"`
-	ContentColCount int `json: "contentColCount"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
@@ -111,6 +107,8 @@ func main(){
 	//用户id（20022309~20022309）一个用户，每人300万粉丝
 	createFollowerX(20022309, 1, 3000000)
 
+
+
 	storeUserFollowerInDB(client)
 	//不用了，清掉
 	gUserFollower = [10022310]userFollowerT{}
@@ -181,26 +179,32 @@ func createFollowerX(userStartId int64, userCount int, followerCount int){
 func storeUserFollowInDB(client *mongo.Client){
 	log.Printf("storeUserFollowInDB start")
 
-	now := time.Now().Unix()
+	curIndex := 0
+	for {
+		log.Printf("progress %d/%d", curIndex, len(gUserFollow))
 
-	for colIndex:=0; colIndex<gConfig.FollowColCount; colIndex++{
-		colName := fmt.Sprintf("Follow_%d", colIndex)
-		log.Printf("storeUserFollowInDB start %s", colName)
+		count := 0
 
+		now := time.Now().Unix()
 		var dataArr []interface{}
-
-		for i:=colIndex; i<len(gUserFollow); i+=gConfig.FollowColCount{
-			info := gUserFollow[i]
-			for followId := range info.followId{
+		for ; curIndex < len(gUserFollow) && count < 100000; curIndex++ {
+			count++
+			info := gUserFollow[curIndex]
+			for followId := range info.followId {
 				data := bson.D{{"userid", info.userId}, {"followid", followId}, {"followtime", now}}
 				dataArr = append(dataArr, data)
 			}
 		}
 
+		colName := fmt.Sprintf("Follow")
 		collection := client.Database(gConfig.MongoDBName).Collection(colName)
 		_, err := collection.InsertMany(context.TODO(), dataArr)
-		if err != nil{
+		if err != nil {
 			log.Fatalf("InsertMany failed. err=[%+v]", err)
+		}
+
+		if curIndex == len(gUserFollow){
+			break
 		}
 	}
 
@@ -209,143 +213,42 @@ func storeUserFollowInDB(client *mongo.Client){
 func storeUserFollowerInDB(client *mongo.Client){
 	log.Printf("storeUserFollowerInDB start")
 
-	now := time.Now().Unix()
+	curIndex := 0
+	for {
+		log.Printf("progress %d/%d", curIndex, len(gUserFollower))
 
-	//先写level表
-	{
-		log.Printf("UserLevel collection start")
-		for colIndex:=0; colIndex<gConfig.UserLevelColCount; colIndex++{
-			var dataArr []interface{}
-			for i:=colIndex; i<len(gUserFollower); i+=gConfig.UserLevelColCount{
-				info := gUserFollower[i]
-				level := common.UserLevelNormal
-				if len(info.followerId) >= 1000000{
-					level = common.UserLevelSuper
-				}else if len(info.followerId) > 100000{
-					level = common.UserLevelBig
-				}else if len(info.followerId) > 10000{
-					level = common.UserLevelMid
-				}else if len(info.followerId) > 100{
-					level = common.UserLevelSmall
-				}else{
-					level = common.UserLevelNormal
+		count := 0
+
+		now := time.Now().Unix()
+		//
+		var dataArr []interface{}
+		for ; curIndex < len(gUserFollower); curIndex++ {
+			if curIndex < 10000000{
+				if count >= 5000{
+					break
 				}
-				data := bson.D{{"userid", info.userId}, {"level", level},
-					{"followercount", len(info.followerId)},
-					{"intrans", false}, {"transbegintime", 0}}
-				dataArr = append(dataArr, data)
-			}
-			colName := "UserLevel_" + fmt.Sprintf("%d", colIndex)
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.InsertMany(context.TODO(), dataArr)
-			if err != nil{
-				log.Fatalf("InsertMany failed. err=[%+v]", err)
-			}
-		}
-	}
-
-	//level_0
-	{
-		log.Printf("level_0 collection start")
-		for colIndex:=0; colIndex<gConfig.FollowedColCount; colIndex++{
-			var dataArr []interface{}
-			for i:=colIndex; i<10000000; i+=gConfig.FollowedColCount{
-				info := gUserFollower[i]
-				for followerId := range info.followerId{
-					data := bson.D{{"userid", info.userId}, {"followedid", followerId}, {"followtime", now}}
-					dataArr = append(dataArr, data)
+			}else{
+				if count >= 1{
+					break
 				}
 			}
-			colName := fmt.Sprintf("Followed_0_%d", colIndex)
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.InsertMany(context.TODO(), dataArr)
-			if err != nil{
-				log.Fatalf("InsertMany failed. err=[%+v]", err)
-			}
-		}
-	}
+			count++
 
-	//level_1
-	{
-		log.Printf("level_1 collection start")
-		for colIndex:=0; colIndex<gConfig.FollowedColCount; colIndex++{
-			var dataArr []interface{}
-			for i:=10000000+colIndex; i<10019999; i+=gConfig.FollowedColCount{
-				info := gUserFollower[i]
-				for followerId := range info.followerId{
-					data := bson.D{{"userid", info.userId}, {"followedid", followerId}, {"followtime", now}}
-					dataArr = append(dataArr, data)
-				}
-			}
-			colName := fmt.Sprintf("Followed_1_%d", colIndex)
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.InsertMany(context.TODO(), dataArr)
-			if err != nil{
-				log.Fatalf("InsertMany failed. err=[%+v]", err)
-			}
-		}
-	}
-
-	//level_2
-	{
-		log.Printf("level_2 collection start")
-		for colIndex:=0; colIndex<gConfig.FollowedColCount; colIndex++{
-			var dataArr []interface{}
-			for i:=10020000+colIndex; i<10021999; i+=gConfig.FollowedColCount{
-				info := gUserFollower[i]
-				for followerId := range info.followerId{
-					data := bson.D{{"userid", info.userId}, {"followedid", followerId}, {"followtime", now}}
-					dataArr = append(dataArr, data)
-				}
-			}
-			colName := fmt.Sprintf("Followed_2_%d", colIndex)
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.InsertMany(context.TODO(), dataArr)
-			if err != nil{
-				log.Fatalf("InsertMany failed. err=[%+v]", err)
-			}
-		}
-	}
-
-	//level_3
-	{
-		log.Printf("level_3 collection start")
-		for colIndex:=0; colIndex<gConfig.FollowedColCount; colIndex++{
-			var dataArr []interface{}
-			for i:=10022000+colIndex; i<10022299; i+=gConfig.FollowedColCount{
-				info := gUserFollower[i]
-				for followerId := range info.followerId{
-					data := bson.D{{"userid", info.userId}, {"followedid", followerId}, {"followtime", now}}
-					dataArr = append(dataArr, data)
-				}
-			}
-			colName := fmt.Sprintf("Followed_3_%d", colIndex)
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.InsertMany(context.TODO(), dataArr)
-			if err != nil{
-				log.Fatalf("InsertMany failed. err=[%+v]", err)
-			}
-		}
-	}
-
-	//level_4
-	{
-		log.Printf("level_4 collection start")
-
-		for i:=10022300; i<10022309; i++{
-			var dataArr []interface{}
-			info := gUserFollower[i]
-			for followerId := range info.followerId{
+			info := gUserFollower[curIndex]
+			for followerId := range info.followerId {
 				data := bson.D{{"userid", info.userId}, {"followedid", followerId}, {"followtime", now}}
 				dataArr = append(dataArr, data)
 			}
+		}
+		colName := fmt.Sprintf("Follower")
+		collection := client.Database(gConfig.MongoDBName).Collection(colName)
+		_, err := collection.InsertMany(context.TODO(), dataArr)
+		if err != nil {
+			log.Fatalf("InsertMany failed. err=[%+v]", err)
+		}
 
-			colName := common.FollowedColNameOfVIP(info.userId)
-			collection := client.Database(gConfig.MongoDBName).Collection(colName)
-			_, err := collection.InsertMany(context.TODO(), dataArr)
-			if err != nil{
-				log.Fatalf("InsertMany failed. err=[%+v]", err)
-			}
+		if curIndex == len(gUserFollower){
+			break
 		}
 	}
 

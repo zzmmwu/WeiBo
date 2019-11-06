@@ -28,8 +28,6 @@ import (
 type configType struct {
 	MongoDBUrl string `json: "mongoDBUrl"`
 	MongoDBName string `json: "mongoDBName"`
-	ContentColCount int `json: "contentColCount"`
-	UserMsgIdColCount int `json: "userMsgIdColCount"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
@@ -114,50 +112,63 @@ func createUserMsgIdX(userStartId int64, userCount int, msgMin int, msgMax int){
 func storeUserMsgId(client *mongo.Client){
 	log.Printf("storeUserMsgId start")
 
-	for colIndex:=0; colIndex<gConfig.UserMsgIdColCount; colIndex++{
-		colName := fmt.Sprintf("UserMsgId_%d", colIndex)
-		log.Printf("storeUserMsgId start %s", colName)
+	curIndex := 0
+	for {
+		log.Printf("progress %d/%d", curIndex, len(gUserMsgIdArr))
 
+		count := 0
 		var dataArr []interface{}
-		for i:=colIndex; i<len(gUserMsgIdArr); i+=gConfig.UserMsgIdColCount{
-			userMsgData := gUserMsgIdArr[i]
+		for ; curIndex<len(gUserMsgIdArr) && count<100000; curIndex++{
+			count++
+
+			userMsgData := gUserMsgIdArr[curIndex]
 			for _, msgId := range userMsgData.msgIdArr{
 				data := bson.D{{"userid", userMsgData.userId}, {"msgid", msgId}}
 				dataArr = append(dataArr, data)
 			}
 		}
 
+		colName := fmt.Sprintf("UserMsgId")
 		collection := client.Database(gConfig.MongoDBName).Collection(colName)
 		_, err := collection.InsertMany(context.TODO(), dataArr)
 		if err != nil{
 			log.Fatalf("InsertMany failed. err=[%+v]", err)
 		}
+
+		if curIndex == len(gUserMsgIdArr){
+			break
+		}
 	}
 
-	log.Printf("storeUserFollowInDB finished.")
+	log.Printf("storeUserMsgId finished.")
 }
 func storeMsgContent(client *mongo.Client){
 	log.Printf("storeMsgContent start")
 
-	for colIndex:=0; colIndex<gConfig.ContentColCount; colIndex++{
-		colName := fmt.Sprintf("MsgContent_%d", colIndex)
-		log.Printf("storeMsgContent start %s", colName)
+	curIndex := 0
+	for {
+		log.Printf("progress %d/%d", curIndex, len(gUserMsgIdArr))
 
+		count := 0
 		var dataArr []interface{}
-		for _, userMsgData := range gUserMsgIdArr{
-			for _, msgId := range userMsgData.msgIdArr{
-				if msgId%int64(gConfig.ContentColCount) == int64(colIndex){
-					data := bson.D{{"msgid", msgId}, {"Text", fmt.Sprintf("u:%d, msg:%d", userMsgData.userId, msgId)},
-						{"videourl", "v"}, {"imgurlarr", []string{"img1", "img2"}}}
-					dataArr = append(dataArr, data)
-				}
+		for ; curIndex<len(gUserMsgIdArr) && count<100000; curIndex++  {
+			count++
+			for _, msgId := range gUserMsgIdArr[curIndex].msgIdArr {
+				data := bson.D{{"msgid", msgId}, {"Text", fmt.Sprintf("u:%d, msg:%d", gUserMsgIdArr[curIndex].userId, msgId)},
+					{"videourl", "v"}, {"imgurlarr", []string{"img1", "img2"}}}
+				dataArr = append(dataArr, data)
 			}
 		}
 
+		colName := fmt.Sprintf("MsgContent")
 		collection := client.Database(gConfig.MongoDBName).Collection(colName)
 		_, err := collection.InsertMany(context.TODO(), dataArr)
-		if err != nil{
+		if err != nil {
 			log.Fatalf("InsertMany failed. err=[%+v]", err)
+		}
+
+		if curIndex == len(gUserMsgIdArr){
+			break
 		}
 	}
 

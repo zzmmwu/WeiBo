@@ -10,6 +10,7 @@ import (
 	"context"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"io/ioutil"
@@ -133,16 +134,32 @@ func (s *serverT) StatPoint(ctx context.Context, req *rlog.StatPointReq) (*rlog.
 		dataArr = append(dataArr, d)
 	}
 
-	//插入
 	data := bson.D{{"svr_name", req.MyName}, {"id", req.PointId},
 		{"data", dataArr},
 		{"svr_time", req.TimeStamp}, {"lc_time", time.Now().Unix()}}
-	collection := client.Database(gConfig.MongoDBName).Collection("svr_stat_point")
-	_, err = collection.InsertOne(ctx, data)
-	if err != nil{
-		log.Printf("insert log failed. err=[%+v]", err)
-		return &rlog.StatPointRsp{}, err
+
+	//插入历史记录数据
+	{
+		collection := client.Database(gConfig.MongoDBName).Collection("svr_stat_point")
+		_, err = collection.InsertOne(ctx, data)
+		if err != nil{
+			log.Printf("insert svr_stat_point failed. err=[%+v]", err)
+			return &rlog.StatPointRsp{}, err
+		}
 	}
+
+	//刷新当前展示数据
+	{
+		collection := client.Database(gConfig.MongoDBName).Collection("cur_svr_stat_point")
+		upsert := true
+		_, err = collection.UpdateOne(ctx, bson.D{{"svr_name", req.MyName}, {"id", req.PointId}},
+										bson.D{{"$set", data}}, &options.UpdateOptions{Upsert: &upsert})
+		if err != nil{
+			log.Printf("upsert cur_svr_stat_point failed. err=[%+v]", err)
+			return &rlog.StatPointRsp{}, err
+		}
+	}
+
 
 	return &rlog.StatPointRsp{}, nil
 }

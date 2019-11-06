@@ -233,7 +233,7 @@ func (s *serverT) Offline(ctx context.Context, in *pb.OfflineReq) (*pb.OfflineRs
 //gRpc proto end///////////////////////////////////////////
 
 func pushRoutine(){
-	//服务器地址到链接的map，给userIdMsgSvr和contentSvr的链接用
+	//服务器地址到链接的map
 	addr2ConnMap := make(map[string]grpcConn)
 
 	///////////
@@ -241,7 +241,7 @@ func pushRoutine(){
 		req := <-gPushReqChn
 
 		//查询followed列表
-		followedIdArr, err := getFollowedUserIdArr(req.UserId, addr2ConnMap)
+		followedIdArr, err := getOnlineFollowedUserIdArr(req.UserId, addr2ConnMap)
 		if err != nil{
 			rlog.Printf(" QueryOnlineFollowedList failed. [%+v]", err)
 			//丢弃
@@ -280,7 +280,7 @@ type grpcConn struct {
 	Conn *grpc.ClientConn
 	Client interface{}
 }
-func getFollowedUserIdArr(userId int64, addr2ConnMap map[string]grpcConn) (*[]int64, error){
+func getOnlineFollowedUserIdArr(userId int64, addr2ConnMap map[string]grpcConn) (*[]int64, error){
 	//允许重试一次
 	for i:=0; i<2; i++{
 		//获取地址对应的链接
@@ -303,8 +303,8 @@ func getFollowedUserIdArr(userId int64, addr2ConnMap map[string]grpcConn) (*[]in
 		}
 
 		//
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		rsp, err := connData.Client.(pb.FollowedSvrClient).QueryFollowedList(ctx, &pb.QueryFollowedListReq{UserId:userId})
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)//如果是大v切还未cache，则时间可能比较长
+		rsp, err := connData.Client.(pb.FollowedSvrClient).QueryOnlineFollowedList(ctx, &pb.QueryFollowedListReq{UserId:userId})
 		cancel()
 		if err != nil {
 			rlog.Printf("QueryFollowedList failed. [%+v]", err)

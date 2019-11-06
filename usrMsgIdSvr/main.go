@@ -7,10 +7,9 @@ package main
 
 import (
 	"WeiBo/common"
-	"WeiBo/common/dbConnPool"
+	"WeiBo/common/dbSvrConnPool"
 	"context"
 	"encoding/json"
-	"go.mongodb.org/mongo-driver/bson"
 	"io/ioutil"
 	"sync/atomic"
 	"time"
@@ -18,7 +17,6 @@ import (
 	//"log"
 	"net"
 	"sort"
-	"strconv"
 	"sync"
 	//"time"
 
@@ -35,9 +33,7 @@ type configType struct {
 	MyName string `json: "myName"`
 	RlogSvrAddr string `json: "rlogSvrAddr"`
 	ListenAddr string  `json: "listenAddr"`
-	MongoDBUrl string `json: "mongoDBUrl"`
-	MongoDBName string `json: "mongoDBName"`
-	UserMsgIdColCount int `json: "userMsgIdColCount"`
+	DBSvrAddr         string `json: "dbSvrAddr"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
@@ -61,8 +57,6 @@ type userMsgHashSlotT struct {
 }
 var gUserMsgHashMap = userMsgHashMapT{}
 
-//db连接池
-var gDBConnPool = dbConnPool.MongoConnPool{}
 
 func (m *userMsgHashMapT)init(){
 	for i := range m.slots{
@@ -131,51 +125,44 @@ func (m *userMsgHashMapT)pull(ctx context.Context, userId int64, lastMsgId int64
 }
 //返回userId对应的msgIdSlice，如果返回的ok不为true则表示userId不存在
 func (m *userMsgHashMapT)loadUserMsgIdFromDB(ctx context.Context, userId int64) ([]int64, bool){
-	client, err := gDBConnPool.WaitForOneConn(ctx)
+	connData, err := gDBConnPool.WaitForOneConn(ctx)
 	if err != nil{
 		rlog.Printf("gDBConnPool.WaitForOneConn failed. err=[%+v]", err)
 		return []int64{}, false
 	}
-	defer gDBConnPool.ReturnConn(client)
+	defer gDBConnPool.ReturnConn(connData)
+	dbSvrConn := connData.Conn
+	dbSvrClient := connData.Client
 
-	//分表后的colName
-	colName := "UserMsgId_"+strconv.Itoa(int(userId%int64(gConfig.UserMsgIdColCount)))
-	collection := client.Database(gConfig.MongoDBName).Collection(colName)
-
-	var userMsgId common.DBUserMsgId
-	filter := bson.D{{"userid", userId}}
-	cursor, err := collection.Find(ctx, filter)
-	if err != nil{
-		rlog.Printf("find userid=[%d] failed. err=[%+v]", userId, err)
-		return []int64{}, false
-	}
-	if cursor.Err() != nil{
-		rlog.Printf("find userid=[%d] failed. err=[%+v]", userId, cursor.Err())
-		return []int64{}, false
-	}
-	//
-	var msgIdArr []int64
-	for cursor.Next(ctx){
-		err = cursor.Decode(&userMsgId)
-		if err != nil {
-			rlog.Printf("[%+v]", err)
-			return []int64{}, false
+	//允许重试一次
+	for i:=0; i<2; i++{
+		if dbSvrConn == nil{
+			var err interface{}
+			dbSvrConn, err = grpc.Dial(gConfig.DBSvrAddr, grpc.WithInsecure())
+			if err != nil {
+				rlog.Printf("connect frontSvr failed [%+v]", err)
+				break
+			}
+			dbSvrClient = pb.NewDbSvrClient(dbSvrConn)
 		}
-		msgIdArr = append(msgIdArr, userMsgId.MsgId)
+		rsp, err := dbSvrClient.QueryUserMsgId(ctx, &pb.DBQueryUserMsgIdReq{UserId:userId})
+		if err != nil{
+			//重连一下
+			_ = dbSvrConn.Close()
+			dbSvrConn = nil
+			continue
+		}
+
+		//
+		var msgIdArr []int64
+		for _, msgId := range rsp.MsgIdArr{
+			msgIdArr = append(msgIdArr, msgId)
+		}
+
+		return msgIdArr, true
 	}
 
-	return msgIdArr, true
-
-	//if userId == 111 {
-	//	return []int64{3,4,6,9,30}, true
-	//}
-	//if userId == 222 {
-	//	return []int64{2,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}, true
-	//}
-	//if userId == 333 {
-	//	return []int64{1,5,7}, true
-	//}
-	//return []int64{}, true
+	return []int64{}, false
 }
 func (m *userMsgHashMapT)post(userId int64, msgId int64){
 	slot := m.slots[userId%userHashMapSlotCount]
@@ -228,6 +215,9 @@ func (m *userMsgHashMapT)deleteMsg(userId int64, msgId int64){
 	}
 }
 
+//db连接池
+var gDBConnPool = dbSvrConnPool.DBSvrConnPool{}
+
 func main(){
 	if len(os.Args)!=2 {
 		rlog.Fatalf("xxx configPath")
@@ -248,11 +238,11 @@ func main(){
 	rlog.Init(gConfig.MyName, gConfig.RlogSvrAddr)
 
 	//
-	err = gDBConnPool.Init(200, gConfig.MongoDBUrl, "", "")
+	err = gDBConnPool.Init(200, gConfig.DBSvrAddr)
 	if err != nil{
 		rlog.Fatalf("%+v", err)
 	}
-	rlog.Printf("dbpool init successed")
+	rlog.Printf("dbPool init success")
 
 	//
 	gUserMsgHashMap.init()

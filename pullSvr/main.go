@@ -315,7 +315,7 @@ func assembleMsgId(followIdArr *[]int64, lastMsgId int64, addr2ConnMap map[strin
 	//把svr对应的负荷分担svr全部记录下来，后面如果链接出现故障就用备用的
 	svrBackAddrMap := make(map[string][]string)
 	{
-		gUserMsgIdSvrData.RLock()
+		gUserMsgIdSvrData.Lock()
 
 		//哪些svr被用到了，做一下记录
 		usedSvrIndexMap := make(map[int64]bool)
@@ -342,7 +342,7 @@ func assembleMsgId(followIdArr *[]int64, lastMsgId int64, addr2ConnMap map[strin
 			}
 		}
 
-		gUserMsgIdSvrData.RUnlock()
+		gUserMsgIdSvrData.Unlock()
 	}
 
 	//
@@ -351,6 +351,10 @@ func assembleMsgId(followIdArr *[]int64, lastMsgId int64, addr2ConnMap map[strin
 		//获取地址对应的链接
 		var connData grpcConn
 		var actSvrAddr = orgAddr
+
+		//debug
+		var tempAddrArr = make([]string, len(svrBackAddrMap[orgAddr]))
+		copy(tempAddrArr, svrBackAddrMap[orgAddr])
 
 		tryAnotherSvr:
 		for len(svrBackAddrMap[orgAddr]) > 0{
@@ -389,7 +393,7 @@ func assembleMsgId(followIdArr *[]int64, lastMsgId int64, addr2ConnMap map[strin
 
 		if len(svrBackAddrMap[orgAddr]) == 0 {
 			//所有svr都不可用，只有丢弃
-			rlog.Printf("all userIdMsgSvr failed. orgAddr=[%s]", orgAddr)
+			rlog.Printf("all userIdMsgSvr failed. orgAddr=[%s] tempAddrArr=%v", orgAddr, tempAddrArr)
 			continue
 		}
 
@@ -431,7 +435,7 @@ func assembleMsgContent(msgIdArr []int64, addr2ConnMap map[string]grpcConn)[]*pb
 	//把svr对应的负荷分担svr全部记录下来，后面如果链接出现故障就用备用的
 	svrBackAddrMap := make(map[string][]string)
 	{
-		gContentSvrData.RLock()
+		gContentSvrData.Lock()
 
 		//哪些svr被用到了，做一下记录
 		usedSvrIndexMap := make(map[int64]bool)
@@ -458,7 +462,7 @@ func assembleMsgContent(msgIdArr []int64, addr2ConnMap map[string]grpcConn)[]*pb
 			}
 		}
 
-		gContentSvrData.RUnlock()
+		gContentSvrData.Unlock()
 	}
 
 	//
@@ -467,6 +471,13 @@ func assembleMsgContent(msgIdArr []int64, addr2ConnMap map[string]grpcConn)[]*pb
 		//获取地址对应的链接
 		var connData grpcConn
 		var actSvrAddr = orgAddr
+
+		////debug
+		//var tempAddrArr = make([]string, len(svrBackAddrMap[orgAddr]))
+		//copy(tempAddrArr, svrBackAddrMap[orgAddr])
+		//if len(svrBackAddrMap[orgAddr]) == 0 {
+		//	rlog.Printf("svrBackAddrMap[%s] empty. ", orgAddr)
+		//}
 
 	tryAnotherSvr:
 		for len(svrBackAddrMap[orgAddr]) > 0{
@@ -483,7 +494,7 @@ func assembleMsgContent(msgIdArr []int64, addr2ConnMap map[string]grpcConn)[]*pb
 				//还未链接则链接
 				conn, err := grpc.Dial(actSvrAddr, grpc.WithInsecure())
 				if err != nil {
-					rlog.Printf("connect userIdMsgSvr failed. actSvrAddr=[%s] [%+v]", actSvrAddr, err)
+					rlog.Printf("connect contentSvr failed. actSvrAddr=[%s] [%+v]", actSvrAddr, err)
 					//当前不可用，换下一个备用的
 					//把当前的svr删掉
 					for i, addr := range svrBackAddrMap[orgAddr]{
@@ -505,15 +516,9 @@ func assembleMsgContent(msgIdArr []int64, addr2ConnMap map[string]grpcConn)[]*pb
 
 		if len(svrBackAddrMap[orgAddr]) == 0 {
 			//所有svr都不可用，只有丢弃
-			rlog.Printf("all userIdMsgSvr failed. orgAddr=[%s]", orgAddr)
+			rlog.Printf("all contentSvr failed. orgAddr=[%s]", orgAddr)
 			continue
 		}
-
-
-
-
-
-
 
 		////获取地址对应的链接
 		//connData, ok := addr2ConnMap[addr]

@@ -6,24 +6,26 @@ package main
 
 
 import (
-	"WeiBo/common"
+	"WeiBo/common/dbSvrConnPool"
+	//"WeiBo/common"
 	"context"
 	"encoding/json"
+	//"errors"
 	"sync/atomic"
 	"time"
 
 	//"errors"
-	"go.mongodb.org/mongo-driver/bson"
+	//"go.mongodb.org/mongo-driver/bson"
 	"google.golang.org/grpc"
 	"io/ioutil"
 	//"log"
 	"net"
 	"os"
-	"strconv"
+	//"strconv"
 	"sync"
 
 	"WeiBo/common/rlog"
-	"WeiBo/common/dbConnPool"
+	//"WeiBo/common/dbConnPool"
 	pb "WeiBo/common/protobuf"
 )
 
@@ -32,9 +34,7 @@ type configType struct {
 	MyName string `json: "myName"`
 	RlogSvrAddr string `json: "rlogSvrAddr"`
 	ListenAddr string  `json: "listenAddr"`
-	MongoDBUrl string `json: "mongoDBUrl"`
-	MongoDBName string `json: "mongoDBName"`
-	ContentColCount int `json: "contentColCount"`
+	DBSvrAddr string `json: "dbSvrAddr"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
@@ -56,9 +56,6 @@ type msgHashSlotT struct {
 	msgMap map[int64]*pb.MsgData
 }
 var gMsgHashMap = msgHashMapT{}
-
-//db连接池
-var gDBConnPool = dbConnPool.MongoConnPool{}
 
 //
 func (m *msgHashMapT)init(){
@@ -104,32 +101,38 @@ func (m *msgHashMapT)pull(ctx context.Context, msgId int64) (*pb.MsgData, bool){
 }
 //如果返回的ok不为true则表示msgId不存在或db异常
 func (m *msgHashMapT)loadMsgFromDB(ctx context.Context, msgId int64) (*pb.MsgData, bool){
-	client, err := gDBConnPool.WaitForOneConn(ctx)
+	connData, err := gDBConnPool.WaitForOneConn(ctx)
 	if err != nil{
 		rlog.Printf("gDBConnPool.WaitForOneConn failed. err=[%+v]", err)
-		return nil, false
+		return &pb.MsgData{}, false
 	}
-	defer gDBConnPool.ReturnConn(client)
+	defer gDBConnPool.ReturnConn(connData)
+	dbSvrConn := connData.Conn
+	dbSvrClient := connData.Client
 
-	//分表后的colName
-	colName := "MsgContent_"+strconv.Itoa(int(msgId%int64(gConfig.ContentColCount)))
-	collection := client.Database(gConfig.MongoDBName).Collection(colName)
-	//log.Printf("find MsgId=%d, colName=%s", msgId, colName)
+	//允许重试一次
+	for i:=0; i<2; i++{
+		if dbSvrConn == nil{
+			var err interface{}
+			dbSvrConn, err = grpc.Dial(gConfig.DBSvrAddr, grpc.WithInsecure())
+			if err != nil {
+				rlog.Printf("connect frontSvr failed [%+v]", err)
+				break
+			}
+			dbSvrClient = pb.NewDbSvrClient(dbSvrConn)
+		}
+		rsp, err := dbSvrClient.QueryMsgContent(ctx, &pb.DBQueryMsgContentReq{MsgId:msgId})
+		if err != nil{
+			//重连一下
+			_ = dbSvrConn.Close()
+			dbSvrConn = nil
+			continue
+		}
 
-	var content common.DBMsgContent
-	filter := bson.D{{"msgid", msgId}}
-	result := collection.FindOne(ctx, filter)
-	if result.Err() != nil{
-		rlog.Printf("[%+v]", result.Err())
-		return nil, false
+		return &pb.MsgData{MsgId:rsp.Msg.MsgId, Text:rsp.Msg.Text, VideoUrl:rsp.Msg.VideoUrl, ImgUrlArr:rsp.Msg.ImgUrlArr}, true
 	}
-	err = result.Decode(&content)
-	if err != nil {
-		rlog.Printf("[%+v]", err)
-		return nil, false
-	}
 
-	return &pb.MsgData{MsgId:content.MsgId, Text:content.Text, VideoUrl:content.VideoUrl, ImgUrlArr:content.ImgUrlArr}, true
+	return &pb.MsgData{}, false
 }
 //这里无需post操作，pull发现没有此msg则会从DB加载
 //test
@@ -154,6 +157,8 @@ func (m *msgHashMapT)deleteMsg(msgId int64){
 	atomic.AddInt64(&m.msgCounter, -1)
 }
 
+//db连接池
+var gDBConnPool = dbSvrConnPool.DBSvrConnPool{}
 
 func main(){
 	if len(os.Args)!=2 {
@@ -175,11 +180,11 @@ func main(){
 	rlog.Init(gConfig.MyName, gConfig.RlogSvrAddr)
 
 	//
-	err = gDBConnPool.Init(200, gConfig.MongoDBUrl, "", "")
+	err = gDBConnPool.Init(200, gConfig.DBSvrAddr)
 	if err != nil{
 		rlog.Fatalf("%+v", err)
 	}
-	rlog.Printf("dbpool init successed")
+	rlog.Printf("dbPool init success")
 
 	//
 	gMsgHashMap.init()
