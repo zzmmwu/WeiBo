@@ -2,8 +2,5 @@
   "myName": "followedSvr",
   "rlogSvrAddr": "139.155.0.212:23498",
   "listenAddr": "0.0.0.0:23492",
-  "mongoDBUrl": "127.0.0.1:27017",
-  "mongoDBName": "WeiBo",
-  "userLevelColCount": 20,
-  "followedColCount": 100
+  "dbSvrAddr": "127.0.0.1:23480"
 }

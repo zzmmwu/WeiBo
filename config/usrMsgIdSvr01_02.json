@@ -2,7 +2,5 @@
   "myName": "usrMsgIdSvr01_02",
   "rlogSvrAddr": "139.155.0.212:23498",
   "listenAddr": "0.0.0.0:23442",
-  "mongoDBUrl": "127.0.0.1:27017",
-  "mongoDBName": "WeiBo",
-  "userMsgIdColCount": 100
+  "dbSvrAddr": "127.0.0.1:23480"
 }

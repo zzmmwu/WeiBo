@@ -1,0 +1,48 @@
+{
+  "myName": "dbSvr01",
+  "rlogSvrAddr": "139.155.0.212:23498",
+  "listenAddr": "0.0.0.0:23480",
+  "dbName": "WeiBo",
+  "followColCount": 300,
+  "userLevelColCount": 20,
+  "followedColCount": 100,
+  "userMsgIdColCount": 100,
+  "contentColCount": 100,
+
+  "dbCluster": [
+    {
+      "url":  "127.0.0.1:27101",
+      "tag": "DB01",
+      "connNum": 4,
+      "colRangeArr": [
+        {"colType":  "Follow", "startIndex": -1, "endIndex": -1},
+        {"colType":  "Followed", "startIndex": -1, "endIndex": -1},
+        {"colType":  "MsgContent", "startIndex": -1, "endIndex": -1}
+      ]
+    },
+    {
+      "url":  "127.0.0.1:27102",
+      "tag": "UserMsgId01",
+      "connNum": 4,
+      "colRangeArr": [
+        {"colType":  "UserMsgId", "startIndex": 0, "endIndex": 32}
+      ]
+    },
+    {
+      "url":  "127.0.0.1:27103",
+      "tag": "UserMsgId02",
+      "connNum": 4,
+      "colRangeArr": [
+        {"colType":  "UserMsgId", "startIndex": 33, "endIndex": 65}
+      ]
+    },
+    {
+      "url":  "127.0.0.1:27104",
+      "tag": "UserMsgId03",
+      "connNum": 4,
+      "colRangeArr": [
+        {"colType":  "UserMsgId", "startIndex": 66, "endIndex": 99}
+      ]
+    }
+  ]
+}
