@@ -10,6 +10,8 @@
 
 │  ├─dbConnPool		数据库连接池
 
+│  ├─dbSvrConnPool		dbSvr连接池
+
 │  ├─grpcStatsHandler	
 
 │  ├─protobuf			整个框架的protobuf定义都在此
@@ -21,6 +23,8 @@
 ├─config				所有服务的配置文件
 
 ├─contentSvr			微博内容提取服务
+
+├─dbSvr			      dbSvr统一接入服务
 
 ├─dbTools
 
@@ -251,6 +255,17 @@ frontNotifySvrMng支持对frontNotifySvr的热缩扩容，实时熔断，而负�
 
 frontNotifySvrMng的查询量和连接数不会太大（每次客户端连接微博服务时用短连接查询一次即可，直到断开连接后下次需要时再查。）我在性能测试时直接只用一台服务器就行了，实际生产环境用主从热备的两个url应该就ok了。如果登录量实在密集，比如每秒过十万级，那么可以用dns解析到多个url上。或者客户端上保存多个url进行循环使用，平时多url全部解析到一个地址，忙时分散。frontNotifySvr对frontNotifySvrMng没有向上依赖关系，所以一个和n个mng对frontNotifySvr是透明的。
 
+## dbSvr简述
+dbSvr作为整个系统数据库的接入服务。所有数据库操作全部发送到dbSvr，由dbSvr集中处理。这样可以统一操作，让db设计对业务系统透明，也能集中进行db性能优化。
+
+  
+
+服务架构：
+![整体架构图](https://wxgate01.5maogame.com/weibo/dbSvrFramework.png)
+各svr通过grpc与dbSvr通信。dbSvr针对每一个db维护一条req管道。管道后是若干处理routine。这样保证各db的命令排队分割开来。每个db都按照自身能力来提供服务。
+
+DB可采用分片的方式，尽量将各DB的压力均衡开。
+
 ## rlogSvr简述
 rlogSvr是一个日志和状态数据远程集中式服务。系统中的服务通过common/rlog中的接口输出日志、告警和状态数据打点信息，统一发送到rlogSvr。便于集中日志查看和状态监控。
 
@@ -281,5 +296,29 @@ grpcStatHandler包提供grpc连接的统计和回调。便于数据统计以及�
 
 ## dbConnPool包简述
 dbConnPool包提供数据库连接池服务。创建固定数量的数据库连接供循环使用。避免所有并发都去自己连接数据库，造成数据库连接数膨胀。
+
+## dbSvrConnPool包简述
+dbSvrConnPool包提供dbSvr连接池服务。创建固定数量的dbSvr连接供循环使用。避免所有并发都去自己连接dbSvr，造成dbSvr连接数膨胀。
+
+## DB设计
+
+这里专门介绍一下我针对weibo系统的数据库设计。
+
+weibo系统只实现了最基本的pull/post/follow/unfollow命令，所以表也只有少数几个。
+
+-   Follow表，存储用户的关注列表。字段有userid和followid。按照userid进行分为300张表，userid和followid作为联合index。
+-   UserLevel表，存储用户等级。100粉以下为0级，1万粉以下为1级，10万粉以下为2级，100万粉以下为3级，100万粉以上为4级。字段有userid，level，followerCount，和其他字段（后面详细介绍）。按照userid分20张表。userid为index。
+-   Followed表，存储用户粉丝表。字段有userid和followedid（粉丝id）。分表规则按照UserLevel进行。0~3级用户分别单独分表，每级100张。4级用户每个用户单独一张表。
+-   UserMsgId表，存储用户发帖的id。字段有userid和msgid。按照userid分表，userid和msgid作为联合index。
+-   ContentMsg表，存储微博消息。字段有msgid和其他内容信息。按照msgid分为100张表，msgid为index。
+
+  
+
+这里需要详细说明的userlevel表和Followed。因为用户粉丝数差距实在是太大，所以不能一股脑全部同样对待。这里就按照分数数进行分级，然后按等级分别对待。
+
+但考虑到用户等级是可能上升的，怎么办呢？这里就在userlevel表中增加了intrans和transbegintime字段。每晚可以定期用userLevelTrans程序扫描level表，查看粉丝数。如果达到升级标准，则将intrans字段和transBeginTime置位，然后进行数据迁移。dbSvr在follow和unfollow时如果看到intrans字段置位，则不再修改对应的followed表，而将数据写入TransFollowed和TransUnFollowed表中。userLevelTrans迁移数据完成后，修改level和intrans字段，再将TransFollowed和TransUnFollowed表中记录的数据转入Followed表。ok
+
+
+
 
 
