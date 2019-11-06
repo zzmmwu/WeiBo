@@ -1,0 +1,55 @@
+{
+	"groups": [
+		{
+			"keys": "bg01_png,bg02_png,bg_gray_png,black_mask_png,blue_button_png,red_button_png,white_mask_png,description_json,level_config_json",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/bg01.png",
+			"type": "image",
+			"name": "bg01_png"
+		},
+		{
+			"url": "assets/bg02.png",
+			"type": "image",
+			"name": "bg02_png"
+		},
+		{
+			"url": "assets/bg_gray.png",
+			"type": "image",
+			"name": "bg_gray_png"
+		},
+		{
+			"url": "assets/black_mask.png",
+			"type": "image",
+			"name": "black_mask_png"
+		},
+		{
+			"url": "assets/blue_button.png",
+			"type": "image",
+			"name": "blue_button_png"
+		},
+		{
+			"url": "assets/red_button.png",
+			"type": "image",
+			"name": "red_button_png"
+		},
+		{
+			"url": "assets/white_mask.png",
+			"type": "image",
+			"name": "white_mask_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description_json"
+		},
+		{
+			"name": "level_config_json",
+			"type": "json",
+			"url": "config/level_config.json"
+		}
+	]
+}

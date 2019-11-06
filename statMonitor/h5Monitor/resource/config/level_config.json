@@ -1,0 +1,1521 @@
+{
+  "season_level_count_arr": [
+    {
+      "basic": 7,
+      "professional": 0
+    },
+    {
+      "basic": 3,
+      "professional": 0
+    },
+    {
+      "basic": 8,
+      "professional": 0
+    },
+    {
+      "basic": 8,
+      "professional": 0
+    },
+    {
+      "basic": 7,
+      "professional": 0
+    },
+    {
+      "basic": 7,
+      "professional": 0
+    },
+    {
+      "basic": 7,
+      "professional": 0
+    },
+    {
+      "basic": 6,
+      "professional": 0
+    },
+    {
+      "basic": 4,
+      "professional": 0
+    },
+    {
+      "basic": 6,
+      "professional": 0
+    },
+    {
+      "basic": 8,
+      "professional": 0
+    },
+    {
+      "basic": 8,
+      "professional": 0
+    },
+    {
+      "basic": 8,
+      "professional": 0
+    },
+    {
+      "basic": 7,
+      "professional": 0
+    },
+    {
+      "basic": 6,
+      "professional": 0
+    }
+  ],
+  "chapterMapDict": {
+    "1": {
+      "bg": "chapter01_map_bg_png",
+      "targetImg": "",
+      "targetImgX": 697,
+      "targetImgY": 350,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 18,
+          "y": 43
+        },
+        {
+          "x": 30,
+          "y": 43
+        },
+        {
+          "x": 42,
+          "y": 43
+        }
+      ]
+    },
+    "2": {
+      "bg": "chapter02_map_bg_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 30
+        },
+        {
+          "x": 23,
+          "y": 30
+        },
+        {
+          "x": 36,
+          "y": 30
+        }
+      ]
+    },
+    "3": {
+      "bg": "chapter03_map_bg_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        },
+        {
+          "x": 32,
+          "y": 43
+        },
+        {
+          "x": 43,
+          "y": 43
+        }
+      ]
+    },
+    "4": {
+      "bg": "chapter04_map_bg_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        },
+        {
+          "x": 32,
+          "y": 43
+        },
+        {
+          "x": 43,
+          "y": 43
+        }
+      ]
+    },
+    "5": {
+      "bg": "chapter05_map_bg_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 18,
+          "y": 43
+        },
+        {
+          "x": 30,
+          "y": 43
+        },
+        {
+          "x": 42,
+          "y": 43
+        }
+      ]
+    },
+    "6": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        }
+      ]
+    },
+    "7": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        }
+      ]
+    },
+    "8": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        }
+      ]
+    },
+    "9": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        }
+      ]
+    },
+    "10": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        }
+      ]
+    },
+    "11": {
+      "bg": "chapter11_map_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        },
+        {
+          "x": 32,
+          "y": 43
+        }
+      ]
+    },
+    "12": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        },
+        {
+          "x": 32,
+          "y": 43
+        }
+      ]
+    },
+    "13": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        },
+        {
+          "x": 32,
+          "y": 43
+        }
+      ]
+    },
+    "14": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        }
+      ]
+    },
+    "15": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        }
+      ]
+    },
+    "16": {
+      "bg": "chapter00_none_png",
+      "targetImg": "",
+      "targetImgX": 400,
+      "targetImgY": 400,
+      "levelArr": [
+        {
+          "x": 10,
+          "y": 16
+        },
+        {
+          "x": 21,
+          "y": 16
+        },
+        {
+          "x": 32,
+          "y": 16
+        },
+        {
+          "x": 43,
+          "y": 16
+        },
+        {
+          "x": 28,
+          "y": 30
+        },
+        {
+          "x": 39,
+          "y": 30
+        },
+        {
+          "x": 21,
+          "y": 43
+        },
+        {
+          "x": 32,
+          "y": 43
+        },
+        {
+          "x": 43,
+          "y": 43
+        }
+      ]
+    }
+  },
+  "chapterCutScenesDict": {
+    "1": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter00_story00_png",
+            "dialImgName": "",
+            "dialPosX": 100,
+            "dialPosY": 100,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 500,
+            "endSmoothly": false
+          }
+          ,
+          {
+            "picName": "chapter00_story01_png",
+            "dialImgName": "",
+            "dialPosX": 100,
+            "dialPosY": 100,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 2000,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter00_story02_png",
+            "dialImgName": "",
+            "dialPosX": 594,
+            "dialPosY": 127,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 2000,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter00_story03_png",
+            "dialImgName": "chapter00_story03_dial01_png",
+            "dialPosX": 454,
+            "dialPosY": 127,
+            "dialStartTime": 0,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0
+          },
+          {
+            "picName": "chapter00_story04_png",
+            "dialImgName": "chapter00_story04_dial01_png",
+            "dialPosX": 228,
+            "dialPosY": 234,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter00_story05_png",
+            "dialImgName": "chapter00_story05_dial01_png",
+            "dialPosX": 294,
+            "dialPosY": 220,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter00_story05_png",
+            "dialImgName": "chapter00_story05_dial02_png",
+            "dialPosX": 546,
+            "dialPosY": 234,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter00_story05_png",
+            "dialImgName": "chapter00_story05_dial03_png",
+            "dialPosX": 294,
+            "dialPosY": 220,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter00_story06_png",
+            "dialImgName": "chapter00_story06_dial01_png",
+            "dialPosX": 294,
+            "dialPosY": 220,
+            "dialStartTime": 1000,
+            "dialDuration": 7000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter01_story00_png",
+            "dialImgName": "chapter01_story00_dial01_png",
+            "dialPosX": 413,
+            "dialPosY": 305,
+            "dialStartTime": 1000,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter01_story00_png",
+            "dialImgName": "chapter01_story00_dial02_png",
+            "dialPosX": 413,
+            "dialPosY": 305,
+            "dialStartTime": 500,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter01_story01_png",
+            "dialImgName": "chapter01_story01_dial01_png",
+            "dialPosX": 413,
+            "dialPosY": 305,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter01_story02_png",
+            "dialImgName": "",
+            "dialPosX": 413,
+            "dialPosY": 305,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 3000,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter01_story04_png",
+            "dialImgName": "",
+            "dialPosX": 100,
+            "dialPosY": 100,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 3000,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "2": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter02_story01_png",
+            "dialImgName": "chapter02_story01_dial01_png",
+            "dialPosX": 586,
+            "dialPosY": 221,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter02_story02_png",
+            "dialImgName": "chapter02_story02_dial01_png",
+            "dialPosX": 307,
+            "dialPosY": 202,
+            "dialStartTime": 2000,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter02_story03_png",
+            "dialImgName": "chapter02_story03_dial01_png",
+            "dialPosX": 629,
+            "dialPosY": 297,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter02_story04_png",
+            "dialImgName": "chapter02_dial02_png",
+            "dialPosX": 283,
+            "dialPosY": 323,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter02_story03_png",
+            "dialImgName": "chapter02_dial03_png",
+            "dialPosX": 629,
+            "dialPosY": 297,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter02_story04_png",
+            "dialImgName": "chapter02_dial04_png",
+            "dialPosX": 283,
+            "dialPosY": 323,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter02_story05_png",
+            "dialImgName": "chapter02_dial05_png",
+            "dialPosX": 517,
+            "dialPosY": 289,
+            "dialStartTime": 1000,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "3": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter03_story01_png",
+            "dialImgName": "chapter03_dial01_png",
+            "dialPosX": 536,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter03_story01_png",
+            "dialImgName": "chapter03_dial02_png",
+            "dialPosX": 229,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter03_story02_png",
+            "dialImgName": "chapter03_dial03_png",
+            "dialPosX": 404,
+            "dialPosY": 141,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "4": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": []
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter04_story01_png",
+            "dialImgName": "chapter04_dial01_png",
+            "dialPosX": 405,
+            "dialPosY": 187,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter04_story02_png",
+            "dialImgName": "chapter04_dial02_png",
+            "dialPosX": 490,
+            "dialPosY": 174,
+            "dialStartTime": 1500,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter04_story02_png",
+            "dialImgName": "chapter04_dial06_png",
+            "dialPosX": 389,
+            "dialPosY": 191,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 1000,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter04_story03_png",
+            "dialImgName": "chapter04_dial03_png",
+            "dialPosX": 500,
+            "dialPosY": 174,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter04_story03_png",
+            "dialImgName": "chapter04_dial04_png",
+            "dialPosX": 398,
+            "dialPosY": 191,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter04_story04_png",
+            "dialImgName": "",
+            "dialPosX": 398,
+            "dialPosY": 191,
+            "dialStartTime": 1000,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 2000,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter04_story05_png",
+            "dialImgName": "chapter04_dial05_png",
+            "dialPosX": 278,
+            "dialPosY": 278,
+            "dialStartTime": 500,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "5": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter05_story01_png",
+            "dialImgName": "chapter05_dial01_png",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter05_story01_png",
+            "dialImgName": "chapter05_dial02_png",
+            "dialPosX": 465,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter05_story02_png",
+            "dialImgName": "chapter05_dial03_png",
+            "dialPosX": 212,
+            "dialPosY": 143,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter05_story02_png",
+            "dialImgName": "chapter05_dial04_png",
+            "dialPosX": 543,
+            "dialPosY": 143,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter05_story03_png",
+            "dialImgName": "chapter05_dial05_png",
+            "dialPosX": 212,
+            "dialPosY": 143,
+            "dialStartTime": 0,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          },
+          {
+            "picName": "chapter05_story04_png",
+            "dialImgName": "",
+            "dialPosX": 333,
+            "dialPosY": 170,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 3000,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter05_story05_png",
+            "dialImgName": "chapter05_dial07_png",
+            "dialPosX": 181,
+            "dialPosY": 138,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter05_story06_png",
+            "dialImgName": "chapter05_dial08_png",
+            "dialPosX": 408,
+            "dialPosY": 267,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "6": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter06_story00_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story01_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story00_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story01_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story00_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story01_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story00_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story01_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 200,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story02_png",
+            "dialImgName": "chapter06_dial00_png",
+            "dialPosX": 517,
+            "dialPosY": 121,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter06_story03_png",
+            "dialImgName": "chapter06_dial01_png",
+            "dialPosX": 517,
+            "dialPosY": 121,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          
+        ]
+      }
+    },
+    "7": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter07_story01_png",
+            "dialImgName": "",
+            "dialPosX": 246,
+            "dialPosY": 255,
+            "dialStartTime": 0,
+            "dialDuration": 2000,
+            "timeEndAfterDial": 2000,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter07_story02_png",
+            "dialImgName": "chapter07_dial01_png",
+            "dialPosX": 530,
+            "dialPosY": 95,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          
+        ]
+      }
+    },
+    "8": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter08_story01_png",
+            "dialImgName": "chapter08_dial01_png",
+            "dialPosX": 444,
+            "dialPosY": 142,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "9": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter09_story01_png",
+            "dialImgName": "chapter09_dial01_png",
+            "dialPosX": 207,
+            "dialPosY": 123,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter09_story01_png",
+            "dialImgName": "chapter09_dial02_png",
+            "dialPosX": 207,
+            "dialPosY": 123,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "10": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter10_story01_png",
+            "dialImgName": "chapter10_dial01_png",
+            "dialPosX": 534,
+            "dialPosY": 143,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter10_story01_png",
+            "dialImgName": "chapter10_dial02_png",
+            "dialPosX": 210,
+            "dialPosY": 129,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter10_story01_png",
+            "dialImgName": "chapter10_dial03_png",
+            "dialPosX": 150,
+            "dialPosY": 129,
+            "dialStartTime": 0,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter10_story01_png",
+            "dialImgName": "chapter10_dial04_png",
+            "dialPosX": 534,
+            "dialPosY": 143,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter10_story02_png",
+            "dialImgName": "chapter10_dial05_png",
+            "dialPosX": 142,
+            "dialPosY": 271,
+            "dialStartTime": 0,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    }
+    ,
+    "11": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+          
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+          {
+            "picName": "chapter11_story01_png",
+            "dialImgName": "chapter11_dial01_png",
+            "dialPosX": 234,
+            "dialPosY": 179,
+            "dialStartTime": 0,
+            "dialDuration": 4000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      }
+    },
+    "12": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+           {
+            "picName": "chapter12_story01_png",
+            "dialImgName": "chapter12_dial01_png",
+            "dialPosX": 479,
+            "dialPosY": 132,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter12_story02_png",
+            "dialImgName": "chapter12_dial02_png",
+            "dialPosX": 395,
+            "dialPosY": 132,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+         
+        ]
+      }
+    },
+    "13": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+           {
+            "picName": "chapter13_story01_png",
+            "dialImgName": "chapter13_dial01_png",
+            "dialPosX": 497,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter13_story01_png",
+            "dialImgName": "chapter13_dial02_png",
+            "dialPosX": 200,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter13_story01_png",
+            "dialImgName": "chapter13_dial03_png",
+            "dialPosX": 200,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter13_story01_png",
+            "dialImgName": "chapter13_dial04_png",
+            "dialPosX": 497,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter13_story01_png",
+            "dialImgName": "chapter13_dial05_png",
+            "dialPosX": 300,
+            "dialPosY": 105,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+         
+        ]
+      }
+    },
+    "14": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+           {
+            "picName": "chapter14_story01_png",
+            "dialImgName": "chapter14_dial01_png",
+            "dialPosX": 182,
+            "dialPosY": 241,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+         
+        ]
+      }
+    },
+    "15": {
+      "cutScenesData_beforeLevel": {
+        "picDataArr": [
+           {
+            "picName": "chapter15_story01_png",
+            "dialImgName": "chapter15_dial00_png",
+            "dialPosX": 351,
+            "dialPosY": 137,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter15_story01_png",
+            "dialImgName": "chapter15_dial01_png",
+            "dialPosX": 540,
+            "dialPosY": 129,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter15_story01_png",
+            "dialImgName": "chapter15_dial02_png",
+            "dialPosX": 231,
+            "dialPosY": 137,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter15_story01_png",
+            "dialImgName": "chapter15_dial03_png",
+            "dialPosX": 540,
+            "dialPosY": 129,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": false
+          },
+          {
+            "picName": "chapter15_story02_png",
+            "dialImgName": "chapter15_dial04_png",
+            "dialPosX": 231,
+            "dialPosY": 137,
+            "dialStartTime": 0,
+            "dialDuration": 3000,
+            "timeEndAfterDial": 0,
+            "endSmoothly": true
+          }
+        ]
+      },
+      "cutScenesData_afterLevel": {
+        "picDataArr": [
+         
+        ]
+      }
+    }
+  }
+}
