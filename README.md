@@ -117,13 +117,13 @@ reqCmd routine负责根据配置文件连接对应的服务。所有服务连接
 RESTFrontSvr负责对外提供REST接口。目前支持pull/post/follow/unfollow操作。
 在RESTFrontSvr前使用nginx反向代理作为前端接入。
 
-*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X GET http://weibo.5maogame.com/pull/111?lastMsgId=0*
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X GET https://weibo.5maogame.com/pull/111?lastMsgId=0*
 
-*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"followId": 222}' http://weibo.5maogame.com/follow/111*
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"followId": 222}' https://weibo.5maogame.com/follow/111*
 
-*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"unFollowId": 222}' http://weibo.5maogame.com/unfollow/111*
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"unFollowId": 222}' https://weibo.5maogame.com/unfollow/111*
 
-*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"text": "你好，我是吴晓勇。欢迎来到我的高性能微博框架。", "imgUrls": [], "VideoUrl": ""}' http://weibo.5maogame.com/post/222*
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"text": "你好，我是吴晓勇。欢迎来到我的高性能微博框架。", "imgUrls": [], "VideoUrl": ""}' https://weibo.5maogame.com/post/222*
 
 
 ## pullSvr简述
