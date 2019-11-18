@@ -5,13 +5,17 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"io"
 	"io/ioutil"
+	"net/http"
+
 	//"log"
 	"net"
 	"os"
@@ -29,6 +33,7 @@ type configType struct {
 	ListenAddr string  `json: "listenAddr"`
 	MsgIdGenSvrAddr string `json: "msgIdGenSvrAddr"`
 	DBSvrAddr string `json: "dbSvrAddr"`
+	ESUrl string `json: "esUrl"`
 }
 //配置文件数据对象
 var gConfig = &configType{}
@@ -285,6 +290,14 @@ func postRoutine(){
 			continue
 		}
 
+		//入ES全文检索库
+		err = storeToES(reqPack.Req.Content)
+		if err != nil{
+			rlog.Printf("storeToES failed. err=[%+v]", err)
+			//丢弃
+			continue
+		}
+
 		rsp := pb.PostRsp{FrontReqId: reqPack.Req.FrontReqId, UserId: reqPack.Req.Content.UserId, MsgId: reqPack.Req.Content.MsgId}
 		//rlog.Printf("%+v", rsp)
 
@@ -536,6 +549,39 @@ func sendToPushSvr(userId int64, msgId int64, addr2ConnMap map[string]grpcConn) 
 	}
 
 	return errors.New("no pushSvr available")
+}
+
+//保存入ES全文检索数据库
+func storeToES(content *pb.MsgData) error{
+	httpClient := &http.Client{}
+
+	updateParams := fmt.Sprintf(`{"msgid": %d, "content": "%s"}`, content.MsgId, content.Text)
+	//rlog.Printf("updateParams=[%s]", updateParams)
+	var jsonStr = []byte(updateParams)
+
+	req, err := http.NewRequest("POST", "http://" + gConfig.ESUrl + "/weibo/article/" + fmt.Sprintf("%d", content.MsgId) + "", bytes.NewBuffer(jsonStr) )
+	if err != nil {
+		rlog.Printf("http.NewRequest failed. err=[%+v]", err)
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rsp, err := httpClient.Do(req)
+	if err != nil{
+		rlog.Printf("http req failed. err=[%+v]", err)
+		return err
+	}
+	//rlog.Printf("rsp=[%v]", rsp)
+
+	defer rsp.Body.Close()
+
+	if rsp.StatusCode != 201{
+		rlog.Fatalf("rsp=[%v]", rsp)
+		return errors.New(fmt.Sprintf("rsp.StatusCode=%d", rsp.StatusCode))
+	}else{
+		//rlog.Printf("create suc")
+		return nil
+	}
 }
 
 func startConfigRefresh(confPath string){
