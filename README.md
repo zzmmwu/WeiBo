@@ -1,7 +1,7 @@
 
 # WeiBo
-一个高性能微博/朋友圈/空间类系统架构，支持千万活跃、百万在线、十万QPS。服务集群支持在线缩扩容、熔断，支持远程日志、统一监控。
-本框架主体采用golang+grpc实现。
+一个高性能微博/朋友圈/空间类系统架构，支持千万活跃、百万在线、十万QPS。服务集群支持在线缩扩容、熔断，支持远程日志、统一监控。支持全文检索。对外提供grpc接口和REST接口。
+本框架主体采用golang+grpc+mongodb+ES。
 
 ## 目录结构
 
@@ -52,6 +52,8 @@
 ├─pushSvr			在线推送
 
 ├─relationChangeSvr	关注（follow）和取关（unfollow）的关系处理
+
+├─RESTFrontSvr 前端对外提供REST接口
 
 ├─rlogSvr			远程日志和监控数据打点服务
 
@@ -110,6 +112,19 @@ reqCmd routine负责根据配置文件连接对应的服务。所有服务连接
 3.  防攻击。全部服务直连，一次DOS攻击可以把后端服务全部搞趴，而不仅仅只是部分接入服务了。
 
 所以，直连的方式可以适合小规模且安全的网络环境，但不适合大并发的开放网络环境。
+
+## RESTFrontSvr简述
+RESTFrontSvr负责对外提供REST接口。目前支持pull/post/follow/unfollow操作。
+在RESTFrontSvr前使用nginx反向代理作为前端接入。
+
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X GET http://weibo.5maogame.com/pull/111?lastMsgId=0*
+
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"followId": 222}' http://weibo.5maogame.com/follow/111*
+
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"unFollowId": 222}' http://weibo.5maogame.com/unfollow/111*
+
+*curl -H "Content-Type:application/json" -H "Data_Type:msg" -X POST --data '{"text": "你好，我是吴晓勇。欢迎来到我的高性能微博框架。", "imgUrls": [], "VideoUrl": ""}' http://weibo.5maogame.com/post/222*
+
 
 ## pullSvr简述
 pullSvr负责处理pull请求。他接受来之frontSvr的pull命令，然后根据用户id和lastMsgId去查询该用户关注的所有人中比lastMsgId更早一些的若干条微博消息（按照时间倒序）。
@@ -203,6 +218,8 @@ postSvr的前端是连接frontSvr的各routine。这些routine会再创建一个
 msgIdGnerator接受多个并发postSvr的请求，互斥的生成不重复的msgId，严格保证在全系统中msgId按照时间顺序递增。在pull操作时，无需比较时间戳，直接用msgId就能进行时间排序。
 
 postSvr不会去连接contentSvr，contentSvr中的缓存由粉丝的pull操作来驱动。
+
+postSvr还会将微博内容通过REST接口发送到ES全文检索库。
 
 postRoutine负责根据配置文件连接对应的服务。所有服务连接支持平行扩展负荷分担，支持热扩容。支持实时检测可用性，如果一个svr不可用则马上尝试其他平行svr，直到成功或所有svr都不可用。
 
@@ -319,7 +336,18 @@ weibo系统只实现了最基本的pull/post/follow/unfollow命令，所以表�
 
 但考虑到用户等级是可能上升的，怎么办呢？这里就在userlevel表中增加了intrans和transbegintime字段。每晚可以定期用userLevelTrans程序扫描level表，查看粉丝数。如果达到升级标准，则将intrans字段和transBeginTime置位，然后进行数据迁移。dbSvr在follow和unfollow时如果看到intrans字段置位，则不再修改对应的followed表，而将数据写入TransFollowed和TransUnFollowed表中。userLevelTrans迁移数据完成后，修改level和intrans字段，再将TransFollowed和TransUnFollowed表中记录的数据转入Followed表。ok
 
-
+## 全文检索ElasticSearch
+利用ES搭建全文检索能力。postSvr在用户发博的时候将信息发送到ES进行索引。ES对外提供REST检索服务。
+*curl -H "Content-Type: application/json" -XGET http://weibo.5maogame.com:9200/weibo/article/_search?pretty=true -d '{
+"from" : 0,
+"size": 10,
+"query" : {
+"query_string" : { "query" : "content:吴晓勇" }
+},
+"highlight" : {
+"fields" : {
+"content" : {}
+}}}'*
 
 
 
