@@ -338,6 +338,7 @@ weibo系统只实现了最基本的pull/post/follow/unfollow命令，所以表�
 
 ## 全文检索ElasticSearch
 利用ES搭建全文检索能力。postSvr在用户发博的时候将信息发送到ES进行索引。ES对外提供REST检索服务。
+
 *curl -H "Content-Type: application/json" -XGET http://weibo.5maogame.com:9200/weibo/article/_search?pretty=true -d '{
 "from" : 0,
 "size": 10,
