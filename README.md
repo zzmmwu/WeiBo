@@ -97,7 +97,7 @@ frontSvr通过grpc+protobuf接入。目前的实现中没有做鉴权和加密�
 
 
 服务架构如下
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/frontSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/frontSvrFramework.png)
 
 frontSvr将所有客户端的请求全部汇聚到10个req管道中，且每一个grpc请求都等待在自己对应的一个rsp接收管道上。每个req管道后面都对应一组routine负责req的发送、rsp的接收以及根据入管道时生成的reqId找到对应的rsp管道。
 
@@ -134,7 +134,7 @@ pullSvr负责处理pull请求。他接受来之frontSvr的pull命令，然后根
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/pullSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/pullSvrFramework.png)
 pullSvr的前端是连接frontSvr的各routine。这些routine会再创建一个负责接收本连接所有rsp的管道并对应一个负责处理rsp的routine。通过一个req 管道将所有pullSvr的请求都汇聚起来。这条集中的req管道后面是若干处理routine（pullAssembleRoutine）。这些处理routine与followSvr/usrMsgSvr/contentSvr保持长连接，从req管道获取请求后按照流程处理。处理完后将rsp丢进对应的rsp的管道。
 
 pullAssembleRoutine负责根据配置文件连接对应的服务。所有服务连接支持平行扩展负荷分担，支持热扩容。支持实时检测可用性，如果一个svr不可用则马上尝试其他平行svr，直到成功或所有svr都不可用。
@@ -149,7 +149,7 @@ followSvr负责查询用户的关注列表。
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/followSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/followSvrFramework.png)
 followSvr采用直连模式，未做请求队列汇聚。并发上限为pullSvr数量乘上pullSvr中pullAssembleRoutine的数量加上relationChangeSvr数量乘上relationChangeSvr中procRoutine的数量。
 
 目前followSvr只做了单台部署设计，未做负荷分担等设计。主要是按照设计的量基本够用，还有更重要的原因是精力和时间有限。
@@ -160,11 +160,11 @@ usrMsgIdSvr负责根据用户id和lastMsgId查询用户的在lastMsgId之前的�
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/usrMsgIdSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/usrMsgIdSvrFramework.png)
 usrMsgIdSvr采用直连模式，未做请求队列汇聚。并发上限为pullSvr数量乘上pullSvr中pullAssembleRoutine的数量加上postSvr数量乘上postRoutine数量。
 
 usrMsgIdSvr采用userId分片+平行扩展的部署模式。并支持热缩扩容，故障熔断。这些能力都由pullSvr和postSvr中的连接模块实现。（这里的实现没有用统一接入的透明连接模式，因为是所有svr都是内部开发嘛所以就由连接模块来实现了）
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/usrMsgIdSvrShard.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/usrMsgIdSvrShard.png)
 
 ## contentSvr简述
 usrMsgIdSvr负责根据msgid获取微博消息的具体内容。支持单个和批量查询。
@@ -172,13 +172,13 @@ usrMsgIdSvr负责根据msgid获取微博消息的具体内容。支持单个和�
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/contentSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/contentSvrFramework.png)
 contentSvr采用直连模式，未做请求队列汇聚。并发上限为pullSvr数量乘上pullSvr中pullAssembleRoutine的数量加上postSvr数量乘上postRoutine数量。
 
   
 
 contentSvr采用msgId分片+平行扩展的部署模式。并支持热缩扩容，故障熔断。这些能力都由pullSvr和postSvr中的连接模块实现。（这里的实现没有用统一接入的透明连接模式，因为是所有svr都是内部开发嘛所以就由连接模块来实现了）
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/contentSvrShard.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/contentSvrShard.png)
 
 ## relationChangeSvr简述
 relationChangeSvr负责处理关注和取关命令。负责刷新数据库的关系表和实时通知followSvr/followedSvr。
@@ -186,7 +186,7 @@ relationChangeSvr负责处理关注和取关命令。负责刷新数据库的关
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/relationChangeSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/relationChangeSvrFramework.png)
 relationChangeSvr的前端是连接frontSvr的各routine。这些routine会再创建一个负责接收本连接所有rsp的管道并对应一个负责处理rsp的routine。通过一个req 管道将所有请求都汇聚起来。这条集中的req管道后面是若干处理routine（procRoutine）。这些处理routine与followSvr/folledSvr/DB保持长连接，从req管道获取请求后按照流程处理。处理完后将rsp丢进对应的rsp的管道。
 
 procRoutine的数量需要根据实际运行情况进行调整（我这里的测试用的100）。pullSvr的吞吐能力主要还取决于后端DB。procRoutine数量越大，DB的并发压力就越大；数量越小则relationChangeSvr的并发处理能力会减弱。假设一个完整的follow/unfollow流程会花费20ms，那么100个routine的极限吞吐就是100*1/0.02=5000。如果DB分片处理能力够强则可以加大并发量，反之可以减小。
@@ -199,7 +199,7 @@ followedSvr负责查询用户的粉丝列表。
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/followedSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/followedSvrFramework.png)
 followedSvr采用直连模式，未做请求队列汇聚。并发上限为pushSvr数量乘上pushSvr中pushRoutine的数量加上relationChangeSvr数量乘上relationChangeSvr中procRoutine的数量。
 
 followedSvr上除了缓存粉丝列表外，还缓存了在线用户表。目的是为了降低通信量。微博的一个大V的粉丝数就有几千万，在本次设计的数量量下大V也是百万粉丝级别。而在线的粉丝至少会低一个数量级。在线推送则只需要获取在线粉丝列表即可，所以在此缓存了一份实时在线用户表，作为过滤。
@@ -212,7 +212,7 @@ postSvr负责处理post请求（发微博）。负责入DB，通知刷新usrMsgI
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/postSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/postSvrFramework.png)
 postSvr的前端是连接frontSvr的各routine。这些routine会再创建一个负责接收本连接所有rsp的管道并对应一个负责处理rsp的routine。通过一个req 管道将所有pullSvr的请求都汇聚起来。这条集中的req管道后面是若干处理routine（postRoutine）。这些处理routine与usrMsgIdSvr/DB/pushSvr保持长连接，从req管道获取请求后按照流程处理。处理完后将rsp丢进对应的rsp的管道。
 
 msgIdGnerator接受多个并发postSvr的请求，互斥的生成不重复的msgId，严格保证在全系统中msgId按照时间顺序递增。在pull操作时，无需比较时间戳，直接用msgId就能进行时间排序。
@@ -236,7 +236,7 @@ pushSvr负责在用户post一条微博后向其所有在线粉丝发送通知。
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/pushSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/pushSvrFramework.png)
 pushSvr中有一个userOnlineCache，这个cache除了缓存在线用户id还保存了用户对应的frontNotifySvr。
 
 pushSvr从postSvr接受push命令。然后会将所有push命令通过一个req 管道汇聚起来。这条集中的req管道后面是若干处理routine（pRoutine）。
@@ -259,7 +259,7 @@ frontNotifySvr通过grpc+protobuf接入。目前的实现中没有做鉴权和�
   
 
 服务架构如下
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/frontNotifySvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/frontNotifySvrFramework.png)
 客户端通过单向stream连接frontNotifySvr来接收notify，并通过心跳来维持在线状态。客户端创建notifyStream即表示登录在线，grpc连接断开或心跳超时则下线。
 
 所有online/offline命令全部汇聚到reqChan管道中，由onlineProcRoutine负责向pushSvr和followedSvr转发。
@@ -279,7 +279,7 @@ dbSvr作为整个系统数据库的接入服务。所有数据库操作全部发
   
 
 服务架构：
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/dbSvrFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/dbSvrFramework.png)
 各svr通过grpc与dbSvr通信。dbSvr针对每一个db维护一条req管道。管道后是若干处理routine。这样保证各db的命令排队分割开来。每个db都按照自身能力来提供服务。
 
 DB可采用分片的方式，尽量将各DB的压力均衡开。
