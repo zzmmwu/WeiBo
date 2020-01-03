@@ -80,7 +80,7 @@
 
 ## 整体架构图
 
-![整体架构图](https://raw.githubusercontent.com/zzmmwu/WeiBo/master/doc/WeiBoFramework.png)
+![整体架构图](https://github.com/zzmmwu/WeiBo/blob/master/doc/WeiBoFramework.png)
 
 
 ## frontSvrMng简述
